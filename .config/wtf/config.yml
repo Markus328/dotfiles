@@ -1,0 +1,53 @@
+wtf:
+  colors:
+    border:
+      focusable: darkslateblue
+      focused: orange
+      normal: gray
+  grid:
+    columns: [17, 25]
+    rows: [3, 6]
+  refreshInterval: 10s
+  mods:
+    clocks_a:
+      enabled: true
+        
+      position:
+        top: 0
+        left: 0
+        height: 1
+        width: 1
+      refreshInterval: 5
+      title: "Date"
+      args: ["+%d/%m/%y %H:%M"]
+      cmd: "date"
+      type: cmdrunner
+    Wifi:
+      title: "Network"
+      args: ["-c","nmcli connection | awk 'NR==2 {for(i=1;i<NF-2;i++)  printf(\"%s \",$i)}'"]
+      cmd: "sh"
+      enabled: true
+      position:
+        top: 0
+        left: 1
+        height: 1
+        width: 1
+      refreshInterval: 3
+      type: cmdrunner
+    resourceusage:
+      title: "Resources"
+      cpuCombined: true
+      enabled: true
+      position:
+        top: 1
+        left: 0
+        height: 1
+        width: 2
+      refreshInterval: 1s
+      showCPU: true
+      showMem: true
+      showSwp: true
+      type: resourceusage
+
+
+
