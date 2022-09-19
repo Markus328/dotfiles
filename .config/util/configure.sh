@@ -2,7 +2,6 @@
 
 export QT_QPA_PLATFORMTHEME=qt5ct
 export MOZ_ENABLE_WAYLAND=1
-export GTK_THEME=Adawaita:dark
 
 ## Wayland XKB layouyt
 export XKB_DEFAULT_LAYOUT=br
