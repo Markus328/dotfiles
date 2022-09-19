@@ -1,0 +1,132 @@
+{
+    // "layer": "top", // Waybar at top layer
+    // "position": "bottom", // Waybar position (top|bottom|left|right)
+    "height": 25, // Waybar height (to be removed for auto height)
+    // "width": 1280, // Waybar width
+    // Choose the order of the modules
+    "margin-left": 4,
+    "modules-left": ["sway/workspaces","sway/mode"],
+    "modules-center": ["sway/window"],
+    "modules-right": ["custom/reload_bar","custom/spacing#space2","idle_inhibitor","custom/spacing", "cpu","custom/spacing", "memory","custom/spacing","pulseaudio","custom/spacing","network","custom/spacing", "clock","custom/spacing", "tray"],
+    // Modules configuration
+     "sway/workspaces": {
+         "disable-scroll": true,
+         "all-outputs": true,
+         "format": "{name}: {icon}",
+	 "icon-size": 28,
+         "format-icons": {
+             "urgent": "",
+             "focused": "",
+             "default": ""
+         }
+     },
+    "custom/spacing": {
+	"format": "  ",
+	"tooltip": false
+     },
+    "custom/spacing#space2": {
+	"format": "      ",
+	"tooltip": false
+
+    },
+
+
+    "custom/reload_bar": {
+	"format": "🔁 {}",
+	"on-click": "killall waybar && sh -c \"nohup waybar &\""
+
+
+
+
+    }, 
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "sway/window": {
+	"format":"{}",
+	"max-length":60,
+	"align": 1,
+	"rewrite": {
+	  "(.*) - .*Firefox.*": "$1 - 🦊",
+	}
+
+    },    
+    "idle_inhibitor": {
+	
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
+    },
+    "tray": {
+        // "icon-size": 0,
+        "spacing": 10,
+	"icon-size":20
+    },
+    "clock": {
+	
+	"margin-left": "3px",
+	"interval": 10,
+        // "timezone": "Brazil/Sao_Paulo",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": "{:%d-%m-%Y}"
+    },
+    "cpu": {
+
+	"states": {
+		"full": 90,
+		"high": 60,
+		"med": 30,
+		
+	},
+		
+	"interval": 1,
+        "format": "{usage}% ",
+        "tooltip": true
+	
+    },
+    "memory": {
+	
+	"states": {
+		"full": 90,
+		"high": 60,
+		"med": 30,
+		
+	},
+	"margin-left": 10,
+	"interval": 1,
+        "format": "{}% "
+    },
+    "network": {
+	"interval": 2,
+	
+        // "interface": "wlp2*", // (Optional) To force the use of this interface
+        "format-wifi": "",
+	"tooltip-format": "{essid} (%{signalStrength}) | IP {ipaddr}",
+	"max-length": 20,
+        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+        "format-linked": "{ifname} (Sem IP) ",
+        "format-disconnected": "⚠",
+	
+	"on-click": "kitty nmtui-connect",
+	"on-click-right": "nm-connection-editor"
+
+    },
+    "pulseaudio": {
+	"states": {
+		"full": 90,
+		"high": 60,
+		"med": 30,
+		
+	},
+	"margin-left": 0,
+        "scroll-step": 1.5, // %, can be a float
+        "format": "{volume}% {icon}",
+        "format-icons": {
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+}
+

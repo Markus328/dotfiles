@@ -1,0 +1,15 @@
+map n scroll down
+map e scroll up
+map N navigate next
+map E navigate previous
+map t toggle_fullscreen
+map y scroll left
+map o scroll right
+map w rotate rotate-cw
+map W rotate rotate-ccw
+set selection-clipboard clipboard
+set completion-fg rgb(255,255,255)
+set default-bg rgb(4,0,47)
+set inputbar-fg rgb(0,238,255)
+set completion-highlight-bg rgb(0,238,255)
+set completion-highlight-fg rgb(0,0,0)
