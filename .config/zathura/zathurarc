@@ -2,6 +2,10 @@ map n scroll down
 map e scroll up
 map N navigate next
 map E navigate previous
+map k search forward
+map K search backward
+map = zoom in
+map - zoom out
 map t toggle_fullscreen
 map y scroll left
 map o scroll right
