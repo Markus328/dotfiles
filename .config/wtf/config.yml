@@ -5,8 +5,8 @@ wtf:
       focused: orange
       normal: gray
   grid:
-    columns: [17, 25]
-    rows: [3, 6]
+    columns: [17, 30]
+    rows: [4, 6]
   refreshInterval: 10s
   mods:
     clocks_a:
@@ -22,9 +22,9 @@ wtf:
       args: ["+%d/%m/%y %H:%M"]
       cmd: "date"
       type: cmdrunner
-    Wifi:
-      title: "Network"
-      args: ["-c","nmcli connection | awk 'NR==2 {for(i=1;i<NF-2;i++)  printf(\"%s \",$i)}'"]
+    Music:
+      title: "Music"
+      args: ["-c","mpc -f '[[%title%] - %artist%]|[%filename%]'"]
       cmd: "sh"
       enabled: true
       position:
@@ -32,7 +32,7 @@ wtf:
         left: 1
         height: 1
         width: 1
-      refreshInterval: 3
+      refreshInterval: 1s
       type: cmdrunner
     resourceusage:
       title: "Resources"
