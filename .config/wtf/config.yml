@@ -5,8 +5,8 @@ wtf:
       focused: orange
       normal: gray
   grid:
-    columns: [17, 30]
-    rows: [4, 6]
+    columns: [17, 35]
+    rows: [5, 6]
   refreshInterval: 10s
   mods:
     clocks_a:
@@ -17,14 +17,14 @@ wtf:
         left: 0
         height: 1
         width: 1
-      refreshInterval: 5
+      refreshInterval: 5s
       title: "Date"
       args: ["+%d/%m/%y %H:%M"]
       cmd: "date"
       type: cmdrunner
     Music:
       title: "Music"
-      args: ["-c","mpc -f '[[%title%] - %artist%]|[%filename%]'"]
+      args: ["-c","mpc -f '[[%title%]\n%artist%]|[%file%]' | awk '$1 !~ /volume:.*/ {print $0}'"]
       cmd: "sh"
       enabled: true
       position:

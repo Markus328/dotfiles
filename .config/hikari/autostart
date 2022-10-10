@@ -1,6 +1,6 @@
 sh -c "foot --server &
 sleep 0.5
-footclient -a systat -w 404x200 wtfutil &
+footclient -a systat -w 500x200 wtfutil &
 $CREATE_WOB
 gammastep -PO 4500 &
 dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY
