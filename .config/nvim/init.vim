@@ -27,7 +27,6 @@ set tabstop=2
 set shiftwidth=2
 set number relativenumber
 set nuw=1
-nnoremap <unique> <C-w> :call system("wl-copy", @")<CR>
 	" Workman configuration
 noremap d w
 noremap w r
@@ -64,8 +63,6 @@ noremap H D
 noremap ~ $
 noremap ^ ~
 noremap ` ^
-
-
 
 augroup vimStartup
     au!
