@@ -28,7 +28,7 @@ upfile() {
     done 
 }
 export PATH=$PATH:~/.local/bin
-export EDITOR=nvim
+export EDITOR=lvim
 export XDG_SESSION_DESKTOP=sway
 alias open='xdg-open'
 alias l='ls --color=always -all'
