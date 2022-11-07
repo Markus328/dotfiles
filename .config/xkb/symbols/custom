@@ -1,6 +1,6 @@
 xkb_symbols "custom" {
 
-    name[Group1]= "English (US, intl., with dead keys)";
+    name[Group1]= "English (custom layout)";
 
     key <TLDE> { [asciitilde, grave, dead_tilde, dead_grave ] };
     key <AE01> { [	   1,     exclam,    exclamdown,      onesuperior ] };

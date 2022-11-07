@@ -4,8 +4,6 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 export MOZ_ENABLE_WAYLAND=1
 
 ## Wayland XKB layouyt
-export XKB_DEFAULT_LAYOUT=br
-export XKB_DEFAULT_VARIANT=abnt2
 export XKB_DEFAULT_OPTIONS="ctrl:nocaps"
 
 ## Wob and volume control
