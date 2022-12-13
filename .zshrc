@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 export LANG=en_US.UTF-8
 
 HISTFILE=~/.zsh_history
@@ -29,7 +36,6 @@ upfile() {
 }
 export PATH=$PATH:~/.local/bin
 export EDITOR=lvim
-export XDG_SESSION_DESKTOP=sway
 alias open='xdg-open'
 alias l='ls --color=always -all'
 alias ls='ls --color=always'
@@ -74,12 +80,12 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-as-monitor \
     zdharma-continuum/zinit-annex-bin-gem-node \
     zdharma-continuum/zinit-annex-patch-dl \
+    romkatv/powerlevel10k \
     zdharma-continuum/zinit-annex-rust
 
 ### End of Zinit's installer chunk
 zinit for \
 light-mode  zsh-users/zsh-autosuggestions \
-	light-mode agkozak/agkozak-zsh-theme \
 	light-mode zsh-users/zsh-completions \
 	light-mode zdharma-continuum/fast-syntax-highlighting \
 	light-mode jeffreytse/zsh-vi-mode  
@@ -129,3 +135,6 @@ function zvm_after_lazy_keybindings() {
   bindkey -M visual 'h' zvm_vi_delete
 }
 ### End of Zinit's installer chunk
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
