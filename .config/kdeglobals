@@ -136,10 +136,11 @@ ForegroundPositive=39,174,96
 ForegroundVisited=155,89,182
 
 [DirSelect Dialog]
-DirSelectDialog Size=836,569
-History Items[$e]=file:///userdata/@dotfiles/keepass/Sync,file:///userdata/@workspace/school/IFCE/POO/eclipse-workspace,file:///userdata/@workspace/school/IFCE/SOR/MedidasSaudeSite/css,file:///userdata/@workspace/school/IFCE/SOR/MedidasSaudeSite/cgi-bin,file:///userdata/@workspace/school/IFCE/SOR/MedidasSaudeSite
+DirSelectDialog Size=855,586
+History Items[$e]=file:$HOME/.config/qtscrcpy,file:$HOME/Videos,file:$HOME,file:$HOME/.config/qtscrcpy,file:$HOME/Videos,file:///userdata/@workspace,file:///userdata/@workspace/school/IFCE/SOR/MedidasSaudeFlask,file:///userdata/@dotfiles/keepass/Sync,file:///userdata/@workspace/school/IFCE/POO/eclipse-workspace,file:///userdata/@workspace/school/IFCE/SOR/MedidasSaudeSite/css,file:///userdata/@workspace/school/IFCE/SOR/MedidasSaudeSite/cgi-bin,file:///userdata/@workspace/school/IFCE/SOR/MedidasSaudeSite
 
 [General]
+AllowKDEAppsToRememberWindowPositions=true
 BrowserApplication=org.mozilla.firefox.desktop
 ColorSchemeHash=78952f1103f6f2c59b78c6ed5fa382c3f5ec18e7
 TerminalApplication=footclient
@@ -156,6 +157,7 @@ toolBarFont=FiraCode Nerd Font,9,-1,5,57,0,0,0,0,0,Medium
 [KDE]
 AnimationDurationFactor=0
 LookAndFeelPackage=org.kde.breezedark.desktop
+SingleClick=true
 
 [KFileDialog Settings]
 Allow Expansion=false
@@ -179,6 +181,7 @@ View Style=DetailTree
 
 [Shortcuts]
 Close=
+Help=
 New=
 Open=
 

@@ -36,6 +36,7 @@ upfile() {
 }
 export PATH=$PATH:~/.local/bin
 export EDITOR=lvim
+export WORKPATH=/userdata/@workspace
 alias open='xdg-open'
 alias l='ls --color=always -all'
 alias ls='ls --color=always'
@@ -53,6 +54,7 @@ alias btr-set='sudo btrfs property set'
 alias btr-get='sudo btrfs property get'
 alias btr-ls='sudo btrfs su l /'
 alias ksync='rsync -a /userdata/@dotfiles/keepass/Sync /run/media/markus/Ventoy/KeepassXC/'
+alias works='ls $WORKPATH'
 
 bindkey -M viins '^ ' autosuggest-accept
 bindkey -M viins '^q' autosuggest-clear
@@ -138,3 +140,9 @@ function zvm_after_lazy_keybindings() {
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+if [ -e /home/markus/.nix-profile/etc/profile.d/nix.sh ]; then . /home/markus/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] ; then
+. "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"; fi
+if [ -e "$HOME/.nix-defexpr/channels" ]; then
+export NIX_PATH="$HOME/.nix-defexpr/channels${NIX_PATH:+:$NIX_PATH}"; fi
