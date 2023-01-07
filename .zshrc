@@ -34,9 +34,10 @@ upfile() {
         curl -F file=@$i http://0x0.st 
     done 
 }
-export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/.local/bin:~/.npm-global/bin
 export EDITOR=lvim
 export WORKPATH=/userdata/@workspace
+alias ngc='nix-collect-garbage'
 alias open='xdg-open'
 alias l='ls --color=always -all'
 alias ls='ls --color=always'
@@ -146,3 +147,5 @@ if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] ; then
 . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"; fi
 if [ -e "$HOME/.nix-defexpr/channels" ]; then
 export NIX_PATH="$HOME/.nix-defexpr/channels${NIX_PATH:+:$NIX_PATH}"; fi
+
+

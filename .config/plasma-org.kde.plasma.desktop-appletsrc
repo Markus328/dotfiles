@@ -306,6 +306,8 @@ hiddenItems=org.kde.plasma.keyboardlayout,org.kde.plasma.networkmanagement
 knownItems=org.kde.plasma.battery,org.kde.plasma.clipboard,org.kde.plasma.devicenotifier,org.kde.plasma.manage-inputmethod,org.kde.plasma.mediacontroller,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.keyboardindicator,org.kde.plasma.networkmanagement,org.kde.plasma.nightcolorcontrol,org.kde.plasma.printmanager,org.kde.plasma.volume
 
 [Containments][62]
+ItemGeometries-1440x900=
+ItemGeometriesHorizontal=
 activityId=39ab8f92-aafa-4230-8580-3e22392ed75b
 formfactor=0
 immutability=1
@@ -316,4 +318,4 @@ wallpaperplugin=org.kde.image
 
 [ScreenMapping]
 itemsOnDisabledScreens=
-screenMapping=desktop:/Música,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/MEGA,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/MEGAsync,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/git-repo,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Desktop,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Imagens,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/MEGAsync Downloads,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Videos,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Games,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/dwm,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Público,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/mpv,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Documentos,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/test-stateless,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/PycharmProjects,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Downloads,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/escola,0,39ab8f92-aafa-4230-8580-3e22392ed75b
+screenMapping=desktop:/Imagens,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/dwm,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Música,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/git-repo,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Público,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Documentos,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/test-stateless,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Desktop,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/MEGAsync Downloads,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/MEGAsync,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Games,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Downloads,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/escola,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/Videos,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/MEGA,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/PycharmProjects,0,39ab8f92-aafa-4230-8580-3e22392ed75b,desktop:/mpv,0,39ab8f92-aafa-4230-8580-3e22392ed75b
