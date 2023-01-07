@@ -1,0 +1,38 @@
+#!/bin/bash
+
+target="$1"
+name="$2"
+mode="$3"
+
+if ! [ "$(cut -c1 <<< $target)" = "/" ] ; then 
+	echo "Not an absolute path"
+	exit 1
+fi
+
+subvol="$(btrfs subvolume show "$target" | awk 'NR==1 {print $NR}')"
+if ! [[ "$subvol" ]] ; then 
+	echo "Invalid btrfs subvolume"
+	exit 1
+fi
+subvol=/"$subvol"
+config=/boot/grub/grub.cfg
+
+if ! [ -f $target"$config" ] ; then
+	echo "Grub config of \"$target\" not found"
+	exit 1
+fi
+
+[[ "$mode" ]] || mode=simple
+
+[[ "$name" ]] || name="$(egrep -o '[^/]+$' <<< $target)"
+if [ "$mode" = "simple" ] ; then
+	content="submenu '$name' {
+	$(egrep -zo '### BEGIN /etc/grub.d/[0-9]+_linux ###.+### END /etc/grub.d/[0-9]+_linux ###' $target"$config" | tr '\0' '\n' | grep -v '#')
+}"
+entry="$content"
+elif [ "$mode" = "full" ] ; then
+	entry="menuentry '$name' {
+	configfile $subvol"$config"	
+}"
+fi
+echo "$entry" >> /etc/grub.d/40_custom

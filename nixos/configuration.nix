@@ -4,7 +4,7 @@
 
 { config, pkgs, ... }:
 {
- 
+
   imports =
     [
       # Include the results of the hardware scan.
@@ -15,7 +15,7 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.auto-optimise-store = true;
 
-
+  ##IMPURITIES: filesystem - add/remove/subs according the current hardware
   #SWAP
   swapDevices = [{
     device = "/dev/sda2";
@@ -32,11 +32,6 @@
   #FILESYSTEM
   fileSystems =
     let
-      zram = {
-        device = "/dev/zram";
-        options = [ "defaults" "pri=32767" ];
-        fsType = "swap";
-      };
       options = [ "rw" "noatime" "ssd" "space_cache=v2" ];
       compress.options = options ++ [ "compress-force=zstd" ];
       device = "/dev/sda3";
@@ -89,8 +84,9 @@
         inherit fsType;
       };
     };
+  ##
 
-  #BOOT
+  ##IMPURITIES: boot - efi only grub
   boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.loader = {
     efi = {
@@ -103,15 +99,17 @@
       device = "nodev";
     };
   };
+  ##
 
   #SYSTEMD
   systemd = {
+    ##IMPURITIES - snapshot service
     services.snapshots = {
       enable = true;
       path = with pkgs;[ bashInteractive btrfs-progs gawk gnused ];
       description = "Do a root and home snapshot";
       serviceConfig = {
-        ExecStart = "/special/scripts/snapshots.sh -r";
+        ExecStart = "/special/scripts/snapshots.sh -r"; ## set the correct path of the script
       };
     };
     timers.snapshots = {
@@ -123,17 +121,11 @@
       };
       wantedBy = [ "snapshots.target" ];
     };
+    ## 
   };
 
 
 
-  # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkbOptions in tty.
-  # };
 
   #DESKTOP
   services.xserver = {
@@ -169,14 +161,6 @@
     fontDir.enable = true;
   };
 
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  # Enable sound.
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   programs.zsh.enable = true;
 
   #USERS
@@ -185,15 +169,9 @@
       shell = pkgs.zsh;
       isNormalUser = true;
       extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-      packages = with pkgs; [
-      ];
     };
     root.shell = pkgs.zsh;
   };
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-
 
   #PACKAGES
   environment.systemPackages = with pkgs; [
@@ -211,19 +189,6 @@
     firefox
     grapejuice
   ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
 
 
   #EXTRA
@@ -255,17 +220,6 @@
     waydroid.enable = true;
     lxd.enable = true;
   };
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  # system.copySystemConfiguration = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
