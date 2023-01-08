@@ -1,6 +1,6 @@
 source ~/.config/util/configure.sh
 if [ "$(tty)" = "/dev/tty1" ] ; then
-startplasma-wayland
+exec startplasma-wayland
 fi
 
 
