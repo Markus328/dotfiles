@@ -37,7 +37,6 @@ upfile() {
 export PATH=$PATH:~/.local/bin:~/.npm-global/bin
 export EDITOR=lvim
 export WORKPATH=/userdata/@workspace
-alias ngc='nix-collect-garbage'
 alias open='xdg-open'
 alias l='ls --color=always -all'
 alias ls='ls --color=always'
@@ -55,7 +54,31 @@ alias btr-set='sudo btrfs property set'
 alias btr-get='sudo btrfs property get'
 alias btr-ls='sudo btrfs su l /'
 alias ksync='rsync -a /userdata/@dotfiles/keepass/Sync /run/media/markus/Ventoy/KeepassXC/'
-alias works='ls $WORKPATH'
+alias works='cd $WORKPATH'
+
+
+export NIXCONFIG=/userdata/@dotfiles/nixos/
+alias ngc='nix-collect-garbage'
+alias hm='home-manager --flake path:$NIXCONFIG/home-manager'
+alias nrb='sudo nixos-rebuild --flake path:$NIXCONFIG'
+
+# usage: nsh <pkg> [-c] [...] = nix shell nixpkgs#<pkg> -c [...]
+# passing -c is the same of nsh <pkg> <pkg> [...]
+# if no others args except <pkg> = nix shell nixpkgs#<pkg>
+nsh (){
+  local cmd
+  local pkg
+  pkg="$1"
+  shift
+  if [ "$1" = "-c" ] ; then
+    cmd=($pkg)
+    shift
+  fi
+
+  cmd=($cmd $@)
+  [[ "$cmd" ]] && cmd=("-c" $cmd)
+  nix shell "nixpkgs#""$pkg" $cmd
+}
 
 bindkey -M viins '^ ' autosuggest-accept
 bindkey -M viins '^q' autosuggest-clear
