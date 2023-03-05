@@ -53,7 +53,7 @@ alias prem='sudo pacman -Rs'
 alias btr-set='sudo btrfs property set'
 alias btr-get='sudo btrfs property get'
 alias btr-ls='sudo btrfs su l /'
-alias ksync='rsync -a /userdata/@dotfiles/keepass/Sync /run/media/markus/Ventoy/KeepassXC/'
+alias ksync='rsync -a ~/Nextcloud/Keepass /run/media/markus/Ventoy/KeepassXC/'
 alias works='cd $WORKPATH'
 
 

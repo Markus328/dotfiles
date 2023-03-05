@@ -4,22 +4,23 @@ set $down n
 set $up e
 set $right o
 exec foot --server
+exec waybar -c ~/.config/waybar/sway/config -s ~/.config/waybar/sway/style.css
 set $term footclient
 set $menu wofi -S drun
 
 
 output * {
 	mode 1440x900@60Hz
-		bg ~/.config/util/wallpaper.png fill
 		adaptive_sync on
 		scale_filter linear
 		max_render_time off
 
 }
-focus_follows_mouse no
+focus_follows_mouse always
 focus_on_window_activation smart
 
 
+exec swaybg -i ~/.config/util/wallpaper.png -m fill
 
 exec ~/.local/share/sway/idle.sh
 
@@ -45,8 +46,6 @@ input "*" {
 
   set $mod Control
   bindsym $mod+Alt+a exec $term
-
-
   bindsym $mod+h exec $menu
 
   floating_modifier $mod normal
@@ -60,7 +59,9 @@ input "*" {
   bindsym Mod4+f exec .local/share/sway/info.sh
 
   bindsym Control+Alt+End exec systemctl poweroff
-  bindsym Control+Alt+Home exec systemctl suspend
+  bindsym Control+Alt+Home exec systemctl hibernate
+  bindsym Control+Alt+Insert exec systemctl suspend 
+  bindsym Control+Alt+Prior exec .config/util/lock.sh
   bindsym Control+Alt+Delete exec reboot
   bindsym Control+Slash exec source .config/util/mpv/shell_setup.sh && mwatch $(wl-paste)
   bindsym Shift+Print exec $print area
@@ -127,32 +128,17 @@ input "*" {
 	bindsym $mod+space focus mode_toggle
 
 	bindsym $mod+a focus parent
-	bindsym $mod+Shift+minus move scratchpad
+	bindsym $mod+comma move scratchpad
 
-	bindsym $mod+minus scratchpad show
+	bindsym $mod+period scratchpad show
 
 	set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
 	exec mkfifo $WOBSOCK
-	exec tail $WOBSOCK -f | wob -H 50 -a bottom
-	set $test exec aplay ~/.local/share/sway/sounds/test.wav
-	bindsym Control+minus exec sh -c "amixer -ud 5 && pamixer --get-volume > $WOBSOCK && $VOLTEST"
-	bindsym Control+equal exec sh -c "amixer -ui 5 && pamixer --get-volume > $WOBSOCK && $VOLTEST"
+	exec tail $WOBSOCK -f | wob 
+	set $test exec aplay ~/.config/util/sounds/voltest.wav
+	bindsym Control+minus exec sh -c "pamixer -d 5 && pamixer --get-volume > $WOBSOCK && $VOLTEST"
+	bindsym Control+equal exec sh -c "pamixer -i 5 && pamixer --get-volume > $WOBSOCK && $VOLTEST"
 
-
-	bindsym Mod5+Shift+r mode "record"
-
-
-	mode "record" {
-
-
-		set $go_def swaymsg mode 'default'
-			bindsym r exec $go_def && /bin/marecord start 
-			bindsym s exec $go_def && /bin/marecord stop 
-			bindsym d exec $go_def && /bin/marecord discard
-			bindsym a exec $go_def && /bin/marecord area_start "$(slurp -f %w:%h:%x:%y)"
-			bindsym Escape exec $go_def
-			bindsym Return exec $go_def
-	}
 
 
 mode "resize" {
@@ -169,7 +155,7 @@ mode "resize" {
 		bindsym Return mode "default"
 		bindsym Escape mode "default"
 }
-set $mod Mod4
+set $mod Mod1
 bindsym $mod+w mode "resize"
 
 
@@ -178,15 +164,22 @@ mode "reso" {
 		bindsym Control+w+t exec ~/.local/share/sway/reso.sh 75
 		bindsym Return mode "default"
 }
-bindsym Mod1+g mode "reso"
+bindsym $mod+g mode "reso"
 
 
+for_window [app_id="foot"] floating enable
+for_window [title="^64Gram.*"] floating enable
+for_window [title="" app_id="firefox"] floating enable
 
 
 
 gaps inner 7
 gaps outer -3
 default_border pixel
+
+font pango:monospace 1
+titlebar_border_thickness 0                                                     
+titlebar_padding 0
 smart_borders smart
 
 
@@ -195,11 +188,11 @@ client.focused #111166 #000099 #ffffff
 client.urgent #551111 #990000 #ffffff
 client.focused_inactive #000033 #111166 #aaaaaa
 
+set $mod Mod4
+bindsym $mod+u border normal 
+bindsym $mod+p border none
 
-bindsym Mod4+u border normal 
-bindsym Mod4+p border none
+seat seat0 xcursor_theme breeze_cursors 24
 
-set $barpath ~/.config/waybar/sway
-exec waybar -c $barconf/config -s $barconf/style.css
 
 include /etc/sway/config.d/*
