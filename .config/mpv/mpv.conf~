@@ -1,0 +1,7 @@
+script-opts=ytdl_hook-ytdl_path=/usr/bin/yt-dlp
+ytdl-format=mp4
+cache-secs=900
+cache-on-disk=yes
+cache-dir=/XFS
+audio-device=alsa
+hwdec=h264

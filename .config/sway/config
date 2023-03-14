@@ -63,7 +63,7 @@ input "*" {
   bindsym Control+Alt+Insert exec systemctl suspend 
   bindsym Control+Alt+Prior exec .config/util/lock.sh
   bindsym Control+Alt+Delete exec reboot
-  bindsym Control+Slash exec source .config/util/mpv/shell_setup.sh && mwatch $(wl-paste)
+  bindsym Control+Slash exec source .config/util/mpv/shell_setup.sh && mwatch "$(wl-paste)"
   bindsym Shift+Print exec $print area
   bindsym Print exec $print 
   bindsym Control+Shift+Print exec $print area copy
@@ -133,11 +133,12 @@ input "*" {
 	bindsym $mod+period scratchpad show
 
 	set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
+  exec rm -rf $WOBSOCK
 	exec mkfifo $WOBSOCK
 	exec tail $WOBSOCK -f | wob 
 	set $test exec aplay ~/.config/util/sounds/voltest.wav
-	bindsym Control+minus exec sh -c "pamixer -d 5 && pamixer --get-volume > $WOBSOCK && $VOLTEST"
-	bindsym Control+equal exec sh -c "pamixer -i 5 && pamixer --get-volume > $WOBSOCK && $VOLTEST"
+	bindsym Control+minus exec sh -c "pamixer -d 5 && pamixer --get-volume > $WOBSOCK && $test"
+	bindsym Control+equal exec sh -c "pamixer -i 5 && pamixer --get-volume > $WOBSOCK && $test"
 
 
 
@@ -169,7 +170,7 @@ bindsym $mod+g mode "reso"
 
 for_window [app_id="foot"] floating enable
 for_window [title="^64Gram.*"] floating enable
-for_window [title="" app_id="firefox"] floating enable
+for_window [title="Library" app_id="firefox"] floating enable
 
 
 
