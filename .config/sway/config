@@ -171,6 +171,7 @@ bindsym $mod+g mode "reso"
 for_window [app_id="foot"] floating enable
 for_window [title="^64Gram.*"] floating enable
 for_window [title="Library" app_id="firefox"] floating enable
+for_window [app_id="org.keepassxc.KeePassXC"] floating enable
 
 
 
