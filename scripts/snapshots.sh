@@ -39,7 +39,7 @@ do_snapshot(){
 	if [[ "$name" ]] ; then
 		new_snap=$dest/$name
 	else
-		snaps=(`ls $dest | egrep '^[0-9]+$'`)
+		snaps=(`ls $dest | grep -E '^[0-9]+$'`)
 		new_snap=$dest/"1"
 
 		if [ -n "$snaps"  ] ; then

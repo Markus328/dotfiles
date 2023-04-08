@@ -58,9 +58,9 @@ input "*" {
 
   bindsym Mod4+f exec .local/share/sway/info.sh
 
-  bindsym Control+Alt+End exec systemctl poweroff
-  bindsym Control+Alt+Home exec systemctl hibernate
-  bindsym Control+Alt+Insert exec systemctl suspend 
+  bindsym Control+Alt+End exec systemctl poweroff -i
+  bindsym Control+Alt+Home exec systemctl hibernate -i
+  bindsym Control+Alt+Insert exec systemctl suspend -i
   bindsym Control+Alt+Prior exec .config/util/lock.sh
   bindsym Control+Alt+Delete exec reboot
   bindsym Control+Slash exec source .config/util/mpv/shell_setup.sh && mwatch "$(wl-paste)"
@@ -170,6 +170,7 @@ bindsym $mod+g mode "reso"
 
 for_window [app_id="foot"] floating enable
 for_window [title="^64Gram.*"] floating enable
+for_window [class="tutanota-desktop"] floating enable
 for_window [title="Library" app_id="firefox"] floating enable
 for_window [app_id="org.keepassxc.KeePassXC"] floating enable
 

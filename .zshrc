@@ -116,7 +116,7 @@ light-mode  zsh-users/zsh-autosuggestions \
 	light-mode zdharma-continuum/fast-syntax-highlighting \
 	light-mode jeffreytse/zsh-vi-mode  
 
-source $HOME/.config/util/mpv/shell_setup.sh
+if [ -f $HOME/.config/util/mpv/shell_setup.sh ] ; then source $HOME/.config/util/mpv/shell_setup.sh ; fi
 
 
 
