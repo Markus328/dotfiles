@@ -9,20 +9,29 @@ set $term footclient
 set $menu wofi -S drun
 
 
-output * {
+output HDMI-A-1 {
+  pos 0 0
 	mode 1440x900@60Hz
 		adaptive_sync on
 		scale_filter linear
 		max_render_time off
 
 }
+
+exec swaymsg create_output
+
+# # headless output to use VNC
+# output HEADLESS-1 {
+#   pos 8000 4000
+#   mode 1440x900
+# }
 focus_follows_mouse always
 focus_on_window_activation smart
 
 
 exec swaybg -i ~/.config/util/wallpaper.png -m fill
 
-exec ~/.local/share/sway/idle.sh
+exec swayidle -C ~/.config/swayidle/sway/config
 
 
 
@@ -52,6 +61,7 @@ input "*" {
 
 
   bindsym $mod+Mod1+m reload
+  bindsym $mod+Mod1+F12 exec swaymsg output "HDMI-A-1" toggle 
 
   bindsym $mod+Shift+r exec swaymsg exit
   set $print ~/.config/util/print_wlroots.sh
@@ -62,10 +72,12 @@ input "*" {
   bindsym Control+Alt+Home exec systemctl hibernate -i
   bindsym Control+Alt+Insert exec systemctl suspend -i
   bindsym Control+Alt+Prior exec .config/util/lock.sh
-  bindsym Control+Alt+Delete exec reboot
+  bindsym Control+Alt+Delete exec systemctl reboot -i
   bindsym Control+Slash exec source .config/util/mpv/shell_setup.sh && mwatch "$(wl-paste)"
   bindsym Shift+Print exec $print area
   bindsym Print exec $print 
+  bindsym Mod1+Print exec $print window 
+  bindsym Control+Mod1+Print exec $print window copy
   bindsym Control+Shift+Print exec $print area copy
   bindsym Control+Print exec $print copy
 
@@ -136,9 +148,9 @@ input "*" {
   exec rm -rf $WOBSOCK
 	exec mkfifo $WOBSOCK
 	exec tail $WOBSOCK -f | wob 
-	set $test exec aplay ~/.config/util/sounds/voltest.wav
-	bindsym Control+minus exec sh -c "pamixer -d 5 && pamixer --get-volume > $WOBSOCK && $test"
-	bindsym Control+equal exec sh -c "pamixer -i 5 && pamixer --get-volume > $WOBSOCK && $test"
+	set $test exec pamixer --get-volume > $WOBSOCK
+	bindsym Control+minus exec sh -c "pamixer -d 5 && $test "
+	bindsym Control+equal exec sh -c "pamixer -i 5 && $test "
 
 
 
@@ -196,6 +208,5 @@ bindsym $mod+u border normal
 bindsym $mod+p border none
 
 seat seat0 xcursor_theme breeze_cursors 24
-
 
 include /etc/sway/config.d/*

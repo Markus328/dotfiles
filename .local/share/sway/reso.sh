@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 reso=`swaymsg -t get_outputs | jq ".[].current_mode"`
 reso="$(echo $reso | jq '.width')x$(echo $reso | jq '.height')"
 case $reso in

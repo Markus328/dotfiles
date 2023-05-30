@@ -1,0 +1,11 @@
+# Path to the lock image
+image=~/.config/util/scr_lock.jpg
+
+# Inside color
+inside-color=000000
+
+# Ring color
+ring-color=000088
+
+# Enable keyboard layout indicator
+hide-keyboard-layout

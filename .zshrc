@@ -29,9 +29,8 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#2222ff,underline"
 
 
 upfile() {
-    for i in "$@" 
-    do
-        curl -F file=@$i http://0x0.st 
+    for i in "${@}"; do
+        curl -F file="@$i" http://0x0.st 
     done 
 }
 export PATH=$PATH:~/.local/bin:~/.npm-global/bin

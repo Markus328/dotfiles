@@ -1,6 +1,7 @@
 source ~/.config/util/configure.sh
 if [ "$(tty)" = "/dev/tty1" ] ; then
-exec sway
+  export XDG_CURRENT_DESKTOP=sway
+  exec sway
 fi
 
 

@@ -3,8 +3,8 @@ export MOZ_ENABLE_WAYLAND=1
 
 ## Wayland XKB layouyt
 export XKB_DEFAULT_OPTIONS="ctrl:nocaps"
-export XKB_DEFAULT_LAYOUT="workman, br"
-export XKB_DEFAULT_VARIANT=", abnt2"
+export XKB_DEFAULT_LAYOUT="workman"
+export XKB_DEFAULT_VARIANT=""
 
 ## Wob and volume control
 export WOBSOCK="$XDG_RUNTIME_DIR/wob.sock"

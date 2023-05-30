@@ -1,31 +1,32 @@
 #!/usr/bin/env bash
 
 success=false
-args=($@)
-[ "${args[-1]}" = "copy" ] && image="/tmp/wl_print.png ; wl-copy < /tmp/wl_print.png ; rm -f /tmp/wl_print.png" || image=~/Imagens/print_$(date +%Y-%m-%d_%H-%m-%s).png
+type="png"
+grim_init="grim -t $type"
 
+args=("$@")
+[ "${args[-1]}" = "copy" ] && image="/dev/stdout | wl-copy" || image=~/Imagens/print_$(date +%Y-%m-%d_%H-%m-%s).png
 
-grim_cmd=false
+print_cmd=false
 case "${args[0]}" in
-area) 
-    select=$(slurp)
-    if [[ "$select" ]] ; then
-	grim_cmd="grim -t png -g \"$select\" $image"
-    fi
-;;
+area)
+	select=$(slurp)
+	if [[ "$select" ]]; then
+		print_cmd="$grim_init -g \"$select\" $image"
+	fi
+	;;
 window)
-    
-    window=`swaymsg -t get_tree | egrep -A 10 "\"focused\": true" | egrep "\"(x|y|width|height)\": [0-9]+" | egrep -o "[0-9]+" | tr '\n' ' ' |  sed "s/^\([0-9]\+\) \([0-9]\+\)/\1,\2/g" | sed "s/ \([0-9]\+\) \([0-9]\+\) / \1x\2/g"`
-    if [[ "$window" ]] ; then
-	grim_cmd="grim -t png -g \"$window\" $image"
-    fi
-;;
-*) 
-    grim_cmd="grim -t png $image"
-;;
+
+	swaymsg && window="-g "$(swaymsg -t get_tree | grep -EA 10 "\"focused\": true" | grep -E "\"(x|y|width|height)\": [0-9]+" | grep -Eo "[0-9]+" | tr '\n' ' ' | sed "s/^\([0-9]\+\) \([0-9]\+\)/\1,\2/g" | sed "s/ \([0-9]\+\) \([0-9]\+\) / \1x\2/g") || window=""
+	if [[ "$window" ]]; then
+		print_cmd="$grim_init $window $image"
+	fi
+	;;
+*)
+	swaymsg && focused_O="-o "$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') || focused_O=""
+	print_cmd="$grim_init $focused_O $image"
+	;;
 esac
 
-bash -c "$grim_cmd" && success=true
-$success && aplay ~/.config/sounds/screen_tick.wav
-
-
+bash -c "$print_cmd" && success=true
+$success && aplay ~/.config/util/sounds/screen_tick.wav
