@@ -5,6 +5,8 @@ set $up e
 set $right o
 exec foot --server
 exec waybar -c ~/.config/waybar/sway/config -s ~/.config/waybar/sway/style.css
+exec keepassxc
+exec nextcloud --background
 set $term footclient
 set $menu wofi -S drun
 
