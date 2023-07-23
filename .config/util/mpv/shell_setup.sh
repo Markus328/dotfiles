@@ -5,7 +5,7 @@ yplay() {
 }
 ywatch(){
 
-	mpv ytdl://ytsearch:"$*"
+	mpv "ytdl://ytsearch:$*"
 
 }
 gdrivewatch() {
@@ -16,15 +16,15 @@ gdrivewatch() {
 
 mwatch() {
 	info="$*"
-	url=`egrep "^(https|http)://[^ ]+$" <<< "$info"`
+	url=`grep -E "^(https|http)://[^ ]+$" <<< "$info"`
 	if [[ "$url" ]] ; then 
 	
-		if 	[  `egrep "drive.google.com" <<< "$info"` ] ; then 
+		if 	[  `grep -E "drive.google.com" <<< "$info"` ] ; then 
 			gdrivewatch $info
 		else 
-			mpv $info
+			mpv "$info"
 		fi
 	else
-		ywatch $info
+		ywatch "$info"
 	fi
 } 

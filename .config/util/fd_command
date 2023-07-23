@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+set -o noglob
+
+max_depth=15
+excludes="-E **/lib*/* -E node_modules -E .snapshots -E **/prefix/* -E .git"
+dir="$1"
+
+shift
+
+echo .
+
+[[ "$dir" ]] && cd "$dir"
+
+if [[ "$PWD" == "$HOME" ]]; then
+	extra+=".config .local/share/applications "
+	extra+="/userdata/@workspace "
+	extra+="-L "
+else
+	path_extra=("/userdata/@dotfiles")
+	if [[ "$PWD" == "/" ]]; then
+		excludes_extra+="-E /nix/{store,var}/* -E /userdata/@games -E /usr/{share,bin,sbin}/* -E /{sb,b}in/* -E /{proc,sys,dev}/* "
+
+	fi
+fi
+
+for path in "${path_extra[@]}"; do
+	if [[ "$PWD" != "$(realpath $path)" ]]; then
+		relative_path="$(realpath --relative-to=$PWD $path)"
+		i_relative_path="$(realpath --relative-to=$path $PWD)"
+		fixed_extra+="$relative_path "
+		if [[ "$relative_path" =~ ^\.\. ]]; then
+			[[ "$relative_path" =~ \.\.$ ]] && fixed_extra+="-E $i_relative_path "
+		else
+			excludes_extra+="-E $relative_path/* "
+		fi
+	fi
+done
+
+fd -Id $max_depth "^" $excludes \
+	$excludes_extra $extra "$@" 2>/dev/null || true
+fd -LIH "^\." $excludes "$@" -d 1 2>/dev/null || true
+[[ "$fixed_extra" ]] && fd -LIHd $max_depth "^" $excludes $fixed_extra 2>/dev/null || true

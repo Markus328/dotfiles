@@ -10,9 +10,9 @@ vim.opt.relativenumber = true
 -- general
 lvim.log.level = "info"
 lvim.format_on_save = {
-  enabled = true,
-  pattern = "*.lua",
-  timeout = 1000,
+	enabled = true,
+	pattern = "*.lua",
+	timeout = 1000,
 }
 -- to disable icons and use a minimalist setup, uncomment the following
 -- lvim.use_icons = false
@@ -39,7 +39,7 @@ lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = false
 
 -- Automatically install missing parsers when entering buffer
-lvim.builtin.treesitter.auto_install = true
+lvim.builtin.treesitter.auto_install = false
 
 vim.cmd([[
 set number relativenumber
@@ -88,7 +88,6 @@ nmap <TAB> :bn<Enter>
 nmap <S-TAB> :bp<Enter>
 ]])
 
-
 -- lvim.builtin.treesitter.ignore_install = { "haskell" }
 
 -- -- always installed on startup, useful for parsers without a strict filetype
@@ -101,14 +100,52 @@ nmap <S-TAB> :bp<Enter>
 
 -- ---configure a server manually. IMPORTANT: Requires `:LvimCacheReset` to take effect
 -- ---see the full default list `:lua =lvim.lsp.automatic_configuration.skipped_servers`
-lvim.lsp.automatic_configuration.skipped_servers = { "angularls", "ansiblels", "antlersls", "csharp_ls", "cssmodules_ls",
-  "denols",
-  "docker_compose_language_service", "ember", "emmet_ls", "eslint", "glint", "golangci_lint_ls", "gradle_ls", "graphql",
-  "jedi_language_server", "ltex", "neocmake", "phpactor", "psalm", "pylsp", "pyre", "quick_lint_js", "reason_ls", "rnix",
-  "rome", "ruby_ls",
-  "ruff_lsp", "solang", "solc", "sorbet", "sourcery", "spectral", "sqlls", "sqls", "stylelint_lsp", "svlangserver",
-  "tflint", "unocss", "verible",
-  "vtsls", "vuels", "pylyzer" }
+lvim.lsp.automatic_configuration.skipped_servers = {
+	"angularls",
+	"ansiblels",
+	"antlersls",
+	"csharp_ls",
+	"cssmodules_ls",
+	"denols",
+	"docker_compose_language_service",
+	"ember",
+	"emmet_ls",
+	"eslint",
+	"glint",
+	"golangci_lint_ls",
+	"gradle_ls",
+	"graphql",
+	"jedi_language_server",
+	"ltex",
+	"neocmake",
+	"phpactor",
+	"psalm",
+	"pylsp",
+	"pyre",
+	"quick_lint_js",
+	"reason_ls",
+	"rnix-lsp",
+	"rome",
+	"ruby_ls",
+	"ruff_lsp",
+	"solang",
+	"solc",
+	"sorbet",
+	"sourcery",
+	"spectral",
+	"sqlls",
+	"sqls",
+	"stylelint_lsp",
+	"svlangserver",
+	"tflint",
+	"unocss",
+	"verible",
+	"vtsls",
+	"vuels",
+	"pylyzer",
+}
+
+lvim.lsp.automatic_servers_installation = false
 -- local opts = {} -- check the lspconfig documentation for a list of all possible options
 -- require("lvim.lsp.manager").setup("pyright", opts)
 
@@ -129,14 +166,15 @@ lvim.lsp.automatic_configuration.skipped_servers = { "angularls", "ansiblels", "
 -- end
 
 -- -- linters and formatters <https://www.lunarvim.org/docs/languages#lintingformatting>
-local formatters = require "lvim.lsp.null-ls.formatters"
-formatters.setup {
-  { exe = "black",    filetypes = { "python" } },
-  { exe = "isort",    filetypes = { "python" } },
-  { exe = "shfmt",    filetypes = { "sh" } },
-  { exe = "stylua",   filetypes = { "lua" } },
-  { exe = "prettier", filetypes = { "css" } }
-}
+local formatters = require("lvim.lsp.null-ls.formatters")
+formatters.setup({
+	{ exe = "black", filetypes = { "python" } },
+	{ exe = "isort", filetypes = { "python" } },
+	{ exe = "shfmt", filetypes = { "sh" } },
+	{ exe = "stylua", filetypes = { "lua" } },
+	{ exe = "prettier", filetypes = { "css" } },
+	{ exe = "alejandra", filetypes = { "nix" } },
+})
 -- local formatters = require "lvim.lsp.null-ls.formatters"
 -- formatters.setup {
 --   { command = "stylua" },
@@ -146,12 +184,18 @@ formatters.setup {
 --     filetypes = { "typescript", "typescriptreact" },
 --   },
 -- }
-local linters = require "lvim.lsp.null-ls.linters"
-linters.setup {
-  {
-    command = "shellcheck",
-    args = { "--severity", "warning" },
-  },
+local linters = require("lvim.lsp.null-ls.linters")
+linters.setup({
+	{
+		command = "shellcheck",
+		args = { "--severity", "warning" },
+		filetypes = { "sh" },
+	},
+})
+
+lvim.lsp.servers = {
+	name = "rnix",
+	cmd = { "rnix-lsp" },
 }
 
 -- -- Additional Plugins <https://www.lunarvim.org/docs/plugins#user-plugins>

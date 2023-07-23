@@ -7,18 +7,18 @@ case "$operation" in
 init)
 
 	WOBSOCK=$XDG_RUNTIME_DIR/wob.sock
-  killall wob
+	killall wob
 	rm -rf "$WOBSOCK"
 	mkfifo "$WOBSOCK"
 	tail "$WOBSOCK" -f | wob
 
 	;;
 up)
-  pamixer -i "$arg"
-	pamixer --get-volume > "$WOBSOCK"
+	pamixer -i "$arg"
+	pamixer --get-volume >"$WOBSOCK"
 	;;
 down)
-  pamixer -d "$arg"
-	pamixer --get-volume > "$WOBSOCK"
+	pamixer -d "$arg"
+	pamixer --get-volume >"$WOBSOCK"
 	;;
 esac

@@ -36,10 +36,6 @@
 	"format":"{}",
 	"max-length":60,
 	"align": 1,
-	"rewrite": {
-	  "(.*) - .*Firefox.*": "$1 - 🦊",
-	}
-
     },    
     "idle_inhibitor": {
 	

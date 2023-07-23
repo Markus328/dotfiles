@@ -36,6 +36,7 @@ upfile() {
 export PATH=$PATH:~/.local/bin:~/.npm-global/bin
 export EDITOR=lvim
 export WORKPATH=/userdata/@workspace
+export FZF_CTRL_T_COMMAND="~/.config/util/fd_command . -t f -t d -d 8 --max-results 200000"
 alias open='xdg-open'
 alias l='ls --color=always -all'
 alias ls='ls --color=always'
@@ -113,7 +114,8 @@ zinit for \
 light-mode  zsh-users/zsh-autosuggestions \
 	light-mode zsh-users/zsh-completions \
 	light-mode zdharma-continuum/fast-syntax-highlighting \
-	light-mode jeffreytse/zsh-vi-mode  
+  light-mode jeffreytse/zsh-vi-mode
+
 
 if [ -f $HOME/.config/util/mpv/shell_setup.sh ] ; then source $HOME/.config/util/mpv/shell_setup.sh ; fi
 
@@ -169,5 +171,4 @@ if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] ; then
 . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"; fi
 if [ -e "$HOME/.nix-defexpr/channels" ]; then
 export NIX_PATH="$HOME/.nix-defexpr/channels${NIX_PATH:+:$NIX_PATH}"; fi
-
 
