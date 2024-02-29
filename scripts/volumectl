@@ -3,11 +3,11 @@
 operation=$1
 arg=$2
 
+WOBSOCK=$XDG_RUNTIME_DIR/${XDG_CURRENT_DESKTOP}_volume.sock
 case "$operation" in
 init)
 
-	WOBSOCK=$XDG_RUNTIME_DIR/wob.sock
-	killall wob
+	pgrep -a "tail" | grep -F -- "$XDG_RUNTIME_DIR/${XDG_CURRENT_DESKTOP}" | awk '{print $1}' | xargs kill
 	rm -rf "$WOBSOCK"
 	mkfifo "$WOBSOCK"
 	tail "$WOBSOCK" -f | wob

@@ -35,6 +35,10 @@ in {
       source = "${config.home.flatpak-themes.themes-join}/share";
       recursive = true;
     };
+    file.".themes" = {
+      source = "${config.home.flatpak-themes.themes-join}/share/themes";
+      recursive = true;
+    };
 
     pointerCursor = {
       gtk.enable = true;

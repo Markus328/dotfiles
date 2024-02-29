@@ -23,10 +23,10 @@ output HDMI-A-1 {
 exec swaymsg create_output
 
 # # headless output to use VNC
-# output HEADLESS-1 {
-#   pos 8000 4000
-#   mode 1440x900
-# }
+output HEADLESS-1 {
+  pos 8000 4000
+  mode 1440x900
+}
 focus_follows_mouse always
 focus_on_window_activation smart
 
@@ -146,13 +146,10 @@ input "*" {
 
 	bindsym $mod+period scratchpad show
 
-	set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
-  exec rm -rf $WOBSOCK
-	exec mkfifo $WOBSOCK
-	exec tail $WOBSOCK -f | wob 
-	set $test exec pamixer --get-volume > $WOBSOCK
-	bindsym Control+minus exec sh -c "pamixer -d 5 && $test "
-	bindsym Control+equal exec sh -c "pamixer -i 5 && $test "
+
+  exec ~/.config/util/sounds/volumectl.sh init
+	bindsym Control+minus exec ~/.config/util/sounds/volumectl.sh down 5
+	bindsym Control+equal exec ~/.config/util/sounds/volumectl.sh up 5
 
 
 

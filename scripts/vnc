@@ -1,0 +1,33 @@
+#!/bin/bash
+
+opt="$1"
+
+hdmi="HDMI-A-1"
+headless="HEADLESS-1"
+hyprconf=~/.config/hypr/hyprland.conf
+socket=$(hyprctl -i 0 -j instances | jq -r ".[0].wl_socket")
+
+export WAYLAND_DISPLAY="$socket"
+case $opt in
+  ""|"hdmi")
+    enable="$hdmi"
+    disable="$headless"
+    ;;
+  "headless")
+    enable="$headless"
+    disable="$hdmi"
+    ;;
+  *)
+    echo "no such option" >&2
+    exit 1
+    ;;
+esac
+
+echo "$enable x $disable"
+
+sed -i -E "s/$enable,disable/$enable/" $hyprconf
+sleep 1
+sed -i -E "s/$disable,((disable,)+)?/$disable,disable,/" $hyprconf
+
+sleep 1
+wayvnc -r -o $enable localhost 5900

@@ -5,6 +5,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+
 export LANG=en_US.UTF-8
 
 HISTFILE=~/.zsh_history
@@ -14,7 +15,7 @@ setopt appendhistory
 setopt nocaseglob
 setopt -J
 
-autoload -U compinit && compinit
+compinit -u
 
 
 typeset -A ZSH_HIGHLIGHT_STYLES
@@ -29,14 +30,15 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#2222ff,underline"
 
 
 upfile() {
-    for i in "${@}"; do
+  for i in "${@}"; do
         curl -F file="@$i" http://0x0.st 
     done 
 }
 export PATH=$PATH:~/.local/bin:~/.npm-global/bin
 export EDITOR=lvim
 export WORKPATH=/userdata/@workspace
-export FZF_CTRL_T_COMMAND="~/.config/util/fd_command . -t f -t d -d 8 --max-results 200000"
+export FZF_CTRL_T_COMMAND="fd_command -d . -- -t f -t d -d 8 --max-results 200000"
+export FZF_DEFAULT_COMMAND="fd_command -d . -- -t f -t d -d 8 --max-results 200000"
 alias open='xdg-open'
 alias l='ls --color=always -all'
 alias ls='ls --color=always'
@@ -57,14 +59,41 @@ alias ksync='rsync -a ~/Nextcloud/Keepass /run/media/markus/Ventoy/KeepassXC/'
 alias works='cd $WORKPATH'
 
 
-export NIXCONFIG=/userdata/@dotfiles/nixos/
+export NIXCONFIG=/userdata/@dotfiles/
 alias ngc='nix-collect-garbage'
-alias hm='home-manager --flake path:$NIXCONFIG/home-manager'
-alias nrb='sudo nixos-rebuild --flake path:$NIXCONFIG'
 
+hm(){
+  cd $NIXCONFIG
+  home-manager --flake . $@ ; cd -
+}
+
+nrb(){
+  cd $NIXCONFIG
+  sudo nixos-rebuild --flake . $@ ; cd -
+}
+
+# alias nrb='cd $NIXCONFIG && sudo nixos-rebuild --flake $NIXCONFIG && cd -'
+
+_fzf_compgen_path() {
+  fd_command -od "$1" -- -td -tf
+}
+
+_fzf_compgen_dir() {
+  fd_command -od "$1" -- -td
+}
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)             fzf --preview "tree -daL 1 {}"           "$@" ;;
+    export|unset)   fzf --preview "eval 'echo \$'{}"         "$@" ;;
+    *)              fzf --preview 'bat -n --color=always {}' "$@" ;;
+  esac
+}
 # usage: nsh <pkg> [-c] [...] = nix shell nixpkgs#<pkg> -c [...]
 # passing -c is the same of nsh <pkg> <pkg> [...]
-# if no others args except <pkg> = nix shell nixpkgs#<pkg>
+# if there are no args but <pkg> = nix shell nixpkgs#<pkg>
 nsh (){
   local cmd
   local pkg

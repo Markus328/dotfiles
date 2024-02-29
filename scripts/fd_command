@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+set -o noglob
+
+max_depth=15
+excludes="-E **/lib*/* -E node_modules -E .snapshots -E **/prefix/* -E .git"
+
+options=$(getopt -o "od:" -l "only-dir,dir" -- "$@")
+eval set -- "$options"
+
+only_dir=false
+
+while :; do
+	case "$1" in
+	-o | --only-dir)
+		only_dir=true
+		;;
+	-d | --dir)
+		if [[ "$2" ]]; then
+			dir="$2"
+			shift
+		else
+			echo "$1 requires an argument"
+			exit 1
+		fi
+
+		;;
+	--)
+		shift
+		break
+		;;
+	esac
+
+	shift
+done
+
+[[ "$dir" ]] || dir=.
+extra_args="$*"
+
+
+relat_dir="$dir"
+dir="$(realpath -s $dir)"
+
+path_extra+=("/userdata/@workspace")
+
+if [[ "$dir" == "$HOME" ]]; then
+	path_extra+=(".config" ".local/share/applications")
+else
+	path_extra+=("/userdata/@dotfiles")
+	if [[ "$dir" == "/" ]]; then
+		excludes_extra+="-E /nix/{store,var}/* -E /userdata/@games -E /usr/{share,bin,sbin}/* -E /{sb,b}in/* -E /{proc,sys,dev}/* "
+
+	fi
+fi
+
+if ! $only_dir; then
+	for path in "${path_extra[@]}"; do
+		if [[ "$dir" != "$(realpath $path)" ]]; then
+			relative_path="$(realpath --relative-to=$dir $path)"
+			i_relative_path="$(realpath --relative-to=$path $dir)"
+      [[ "$relat_dir" == "." ]] && fixed_extra+="$relative_path " || fixed_extra+="$(realpath -s --realative-to=$PWD $relat_dir/$relative_path) "
+			if [[ "$relative_path" =~ ^\.\. ]]; then
+				[[ "$relative_path" =~ \.\.$ ]] && fixed_extra+="-E $i_relative_path "
+			else
+				excludes_extra+="-E $relative_path/* "
+			fi
+		fi
+	done
+fi
+
+echo "$relat_dir"
+
+[[ "$dir" == "$PWD" ]] && dir="" || dir="$relat_dir"
+
+fd -Id $max_depth "^" $excludes \
+	$excludes_extra $dir $extra_args
+fd -LIH "^\." $excludes $excludes_extra $dir $extra_args -d 1 2>/dev/null || true
+
+[[ "$fixed_extra" ]] && ! $only_dir && fd -LIHd $max_depth "^" $excludes $fixed_extra $extra_args 2>/dev/null || true

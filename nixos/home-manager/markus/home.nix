@@ -1,47 +1,55 @@
 {
   config,
+  scripts,
   pkgs,
+  username,
+  host,
   ...
 }: {
-  imports = [
-    ../themes.nix
-  ];
-  home.username = "markus";
-  home.homeDirectory = "/home/markus";
-  home.stateVersion = "23.05";
-
-  programs.zsh = {
-    enable = true;
-    dotDir = ".config/zsh";
-    initExtra = ''source ~/.zshrc'';
-    loginExtra = ''source .zlogin'';
-  };
-  programs.fzf = {
-  home.file.".local/bin/finder".source = ".config/util/fzf-finder";
+  services.syncthing.enable = true;
+  programs.direnv = {
     enable = true;
     enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
+  services.mako = {
+    enable = true;
+    extraConfig = builtins.readFile ../../../.config/mako/config.backup;
   };
   programs.home-manager.enable = true;
-  home.packages = with pkgs; [
-    t64gram
-    tmux
-    zathura
-    syncthing
+  home.packages = with pkgs;
+    [
+      t64gram
+      tmux
+      zathura
+      yt-dlp
+      gamemode
+      shellcheck
+      fuzzel
+      alejandra
+      ncdu
+      nil
+      # grapejuice
+      # alsa-utils
 
-    #Neovim
-    # cargo
-    alejandra
-    gamemode
-    shfmt
-    shellcheck
-    # rnix-lsp
-    stylua
-    isort
-    black
-    nodePackages.prettier
-    yt-dlp
-    fd
-    ripgrep
-    bc
-  ];
+      obsidian
+      keepassxc
+      nextcloud-client
+      stremio
+      qbittorrent-qt5
+      osu-lazer
+      heroic
+      nextcloud-client
+    ]
+    ++ (with scripts; [
+      fd_command
+      rg_command
+      fzf-finder
+      print-wlroots
+      volumectl
+      snapshots
+      distrobox-delta
+      fuzzel-kill
+      vnc
+    ]);
 }

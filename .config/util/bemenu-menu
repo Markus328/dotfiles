@@ -1,8 +1,1 @@
-#!/usr/bin/env bash
-
-# bemenu theming
-lines="-l 20"
-font="-fn Inconsolata-13"
-colors="-nb #2C323E -nf #9899a0 -sb #BF616A -sf #2C323E"
-
-j4-dmenu-desktop --dmenu="bemenu -i -p 'Launch' $lines $colors $font"
+../../scripts/bemenu-menu

@@ -11,6 +11,7 @@ ro="true"
 
 homedir=/home/
 rootdir=/
+max_snapshots=4
 
 make_home=true
 make_root=true
@@ -63,7 +64,7 @@ do_snapshot() {
 
 			last_snap=$(echo "${snaps[${#snaps[@]} - 1]}" | cut -c1)
 
-			if [ "$last_snap" -ge 3 ]; then
+			if [ "$last_snap" -ge $max_snapshots ]; then
 
 				act_snap=$last_snap
 
@@ -129,7 +130,7 @@ do_root_snapshot() {
     home_id=$(btrfs su show "$homedir" | awk '/Subvolume ID/ {print $NF}')
 
     sed -i "s:\(subvol=/\?${home_subvol}\)\|\(subvolid=${home_id}\):subvolid=${bound_home_id}:g" "$snap_root"/etc/fstab
-		echo "linked home snapshot to root snapshot /etc/fstab"
+		echo "linked home snapshot to root snapshot's /etc/fstab"
 
 	fi
 }

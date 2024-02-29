@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -o noglob
+get_text() {
+	pattern="$1"
+	if [[ "$2" ]]; then
+		target="$2"
+	else
+		target=.
+	fi
+	if [[ -d "$target" ]]; then
+		[[ "$pattern" ]] || exit
+		if [[ "$(realpath $target)" == "$HOME" ]]; then
+			extra="./.config ./.local/share/applications"
+		fi
+		cd "$target" || exit
+		target="."
+	elif ! [[ "$pattern" ]]; then
+		rg "." "$target"
+		return
+
+	fi
+
+  [[ "$PWD" == "/" ]] && glob+='-g !/nix/ -g !/proc/ -g !/dev/ -g !/sys/ -g !/run/ '
+	prefix='rg --color=always --hidden --line-number --column --smart-case -L --no-messages --no-ignore-files --heading --max-filesize 50K '
+	glob+='-g !.*/ -g !prefix/'
+	$prefix -e "$pattern" $target $extra $glob
+}
+
+printf "\n\n\n"
+get_text "$@"

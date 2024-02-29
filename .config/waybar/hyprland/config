@@ -5,11 +5,11 @@
     // "width": 1280, // Waybar width
     // Choose the order of the modules
     "margin-left": 4,
-    "modules-left": ["wlr/workspaces","wlr/mode"],
+    "modules-left": ["hyprland/workspaces","hyprland/mode"],
     "modules-center": ["hyprland/window"],
     "modules-right": ["idle_inhibitor","custom/spacing", "cpu","custom/spacing", "memory","custom/spacing","pulseaudio","custom/spacing","network","custom/spacing", "clock","custom/spacing", "tray"],
     // Modules configuration
-     "wlr/workspaces": {
+     "hyprland/workspaces": {
          "disable-scroll": true,
          "all-outputs": true,
          "format": "{name}: {icon}",
@@ -26,7 +26,7 @@
      },
 
 
-    "sway/mode": {
+    "hyprland/mode": {
         "format": "<span style=\"italic\">{}</span>"
     },
     "hyprland/window": {

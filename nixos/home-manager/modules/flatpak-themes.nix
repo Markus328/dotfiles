@@ -47,9 +47,9 @@ in {
     home.activation.expose-themes-flatpak = lib.hm.dag.entryAfter ["linkGeneration"] ''
       THEMES="${builtins.concatStringsSep ";" all-themes}"
       THEMES_NAME="${builtins.concatStringsSep ";" (builtins.map (theme: theme.name) all-themes)}"
-      HOME_FILES="${config.home-files}/.local/share"
+      HOME_FILES="${config.home-files}/.local/share;${config.home-files}/.themes"
       HOME_THEMES="${themes-join}/share"
-      THEMES="$THEMES;$HOME_FILES;$HOME_THEMES"
+      THEMES="$THEMES;$HOME_FILES;$HOME_THEMES;~/.themes"
 
       edit_paths() {
       	local paths=$*

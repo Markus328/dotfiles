@@ -1,4 +1,13 @@
-{pkgs,config, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
+  imports = [
+    ../nixos-desktop.nix
+    ./home.nix
+  ];
+
   nixpkgs.overlays = [
     (self: super: {
       waybar = super.waybar.overrideAttrs (oldAttrs: {
@@ -13,13 +22,9 @@
     waybar
     wofi
     swaybg
-    nixos-option
-    # bottles
-    # grapejuice
-    wl-clipboard
-    foot
-    tmux
-    swaylock
     swayidle
+    hyprlock
+    hypridle
+    libnotify
   ];
 }

@@ -39,10 +39,11 @@ lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = false
 
 -- Automatically install missing parsers when entering buffer
-lvim.builtin.treesitter.auto_install = false
+-- lvim.builtin.treesitter.auto_install = false
 
 vim.cmd([[
 set number relativenumber
+set hidden
 noremap d w
 noremap w r
 noremap e k
@@ -96,7 +97,7 @@ nmap <S-TAB> :bp<Enter>
 -- -- generic LSP settings <https://www.lunarvim.org/docs/languages#lsp-support>
 
 -- --- disable automatic installation of servers
--- lvim.lsp.installer.setup.automatic_installation = false
+lvim.lsp.installer.setup.automatic_installation = false
 
 -- ---configure a server manually. IMPORTANT: Requires `:LvimCacheReset` to take effect
 -- ---see the full default list `:lua =lvim.lsp.automatic_configuration.skipped_servers`
@@ -105,6 +106,8 @@ lvim.lsp.automatic_configuration.skipped_servers = {
 	"ansiblels",
 	"antlersls",
 	"csharp_ls",
+	"clangd",
+	"cmake-language-server",
 	"cssmodules_ls",
 	"denols",
 	"docker_compose_language_service",
@@ -144,7 +147,7 @@ lvim.lsp.automatic_configuration.skipped_servers = {
 	"vuels",
 	"pylyzer",
 }
-
+require("lspconfig").clangd.setup({})
 lvim.lsp.automatic_servers_installation = false
 -- local opts = {} -- check the lspconfig documentation for a list of all possible options
 -- require("lvim.lsp.manager").setup("pyright", opts)
@@ -197,14 +200,22 @@ lvim.lsp.servers = {
 	name = "rnix",
 	cmd = { "rnix-lsp" },
 }
-
 -- -- Additional Plugins <https://www.lunarvim.org/docs/plugins#user-plugins>
--- lvim.plugins = {
---     {
---       "folke/trouble.nvim",
---       cmd = "TroubleToggle",
---     },
--- }
+lvim.plugins = {
+  {
+ "ellisonleao/glow.nvim",
+  ft = {"markdown"},
+  config = function () require("glow").setup() end
+  
+
+  -- build = "yay -S glow"
+},
+}
+-- lvim.builtin.telescope.on_config_done = function(telescope)
+--   pcall(telescope.load_extension, "glow")
+--   -- pcall(telescope.load_extension, "neoclip")
+--   -- any other extensions loading
+-- end
 
 -- -- Autocommands (`:help autocmd`) <https://neovim.io/doc/user/autocmd.html>
 -- vim.api.nvim_create_autocmd("FileType", {
@@ -213,4 +224,4 @@ lvim.lsp.servers = {
 --     -- let treesitter use bash highlight for zsh files as well
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
--- })
+
