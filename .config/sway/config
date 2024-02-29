@@ -66,14 +66,14 @@ input "*" {
   bindsym $mod+Mod1+F12 exec swaymsg output "HDMI-A-1" toggle 
 
   bindsym $mod+Shift+r exec swaymsg exit
-  set $print ~/.config/util/print_wlroots.sh
+  set $print print-wlroots
 
   bindsym Mod4+f exec .local/share/sway/info.sh
 
   bindsym Control+Alt+End exec systemctl poweroff -i
   bindsym Control+Alt+Home exec systemctl hibernate -i
   bindsym Control+Alt+Insert exec systemctl suspend -i
-  bindsym Control+Alt+Prior exec .config/util/lock.sh
+  bindsym Control+Alt+Prior exec swaylock
   bindsym Control+Alt+Delete exec systemctl reboot -i
   bindsym Control+Slash exec source .config/util/mpv/shell_setup.sh && mwatch "$(wl-paste)"
   bindsym Shift+Print exec $print area
@@ -147,9 +147,9 @@ input "*" {
 	bindsym $mod+period scratchpad show
 
 
-  exec ~/.config/util/sounds/volumectl.sh init
-	bindsym Control+minus exec ~/.config/util/sounds/volumectl.sh down 5
-	bindsym Control+equal exec ~/.config/util/sounds/volumectl.sh up 5
+  exec volumectl init
+	bindsym Control+minus exec volumectl down 5
+	bindsym Control+equal exec volumectl up 5
 
 
 

@@ -1,5 +1,5 @@
 # Path to the lock image
-image=~/.config/util/scr_lock.jpg
+image=~/.config/util/lock.png
 
 # Inside color
 inside-color=000000

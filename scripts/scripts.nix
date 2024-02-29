@@ -17,7 +17,7 @@ in rec {
   fzf-finder = importScript "fzf-finder" [fd_command rg_command bc fzf xdg-utils getopt];
   volumectl = importScript "volumectl" [wob alsa-utils pamixer];
 
-  print-wlroots = importScript "print-wlroots" [grim slurp];
+  print-wlroots = importScript "print-wlroots" [grim slurp alsa-utils];
 
   fuzzel-kill = importScript "fuzzel-kill" [fuzzel];
   snapshots = importScript "snapshots" [];

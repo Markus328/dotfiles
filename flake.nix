@@ -103,8 +103,8 @@
 
           modules = baseModules ++ [(maybeUserConfig username host)];
           extraSpecialArgs = {
-            inherit (inputs.self) self;
-            inherit (inputs.self.scripts) scripts;
+            inherit (inputs) self;
+            inherit (inputs.self) scripts;
             inherit username host;
           };
           # extraModules = [ ./home/standalone.nix ];
