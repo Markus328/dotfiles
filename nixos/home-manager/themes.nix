@@ -49,6 +49,10 @@ in {
   };
   gtk = {
     enable = true;
+    iconTheme = {
+      name = "Adwaita";
+      package = adwaita-icon-theme;
+    };
     theme = {
       name = "Dracula";
       package = dracula-theme;
