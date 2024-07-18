@@ -7,18 +7,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprlock = {
-      url = "github:hyprwm/hyprlock";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hypridle = {
-      url = "github:hyprwm/hypridle";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     t64gram = {
       url = "github:Markus328/64gram-desktop-bin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -35,6 +23,10 @@
       url = "github:pjones/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # lix-module = {
+    #   url = "https://git.lix.systems/lix-project/nixos-module/archive/2.90.0.tar.gz";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
   outputs = inputs: let
@@ -44,18 +36,12 @@
         inputs.nixGL.overlay
         inputs.t64gram.overlay
         inputs.osu-nixos.overlay
-        inputs.hyprlock.overlays.default
-        inputs.hypridle.overlays.default
       ];
       config = import ./nixos/nixpkgs/config.nix;
     };
   in {
-    defaultPackage.x86_64-linux = inputs.home-manager.defaultPackage.x86_64-linux;
-
     nixosConfigurations.nixos-desktop = inputs.nixpkgs.lib.nixosSystem {
-      # inherit pkgs;
       modules = [
-        # inputs.hyprland.nixosModules.default
         ./nixos/configuration.nix
       ];
       specialArgs = {inherit inputs;};
@@ -63,6 +49,11 @@
     scripts = import ./scripts/scripts.nix {
       inherit pkgs;
       scriptsPath = ./scripts;
+    };
+    vtoyboot = import ./scripts/vtoyboot/vtoy.nix {inherit pkgs;};
+    vtoyboot-fhs = import ./scripts/vtoyboot/vtoy.nix {
+      inherit pkgs;
+      bubblewrap = true;
     };
     homeConfigurations = let
       prefix = ./nixos/home-manager;
@@ -74,7 +65,7 @@
       baseModules = getHmPaths ["modules/flatpak-themes.nix"];
 
       users = ["markus" "talita"];
-      hosts = ["arch-desktop" "nixos-desktop"];
+      hosts = ["arch-desktop" "nixos-desktop" "nixos-portable"];
 
       maybeUserConfig = user: host: let
         personalized_config = getHmPaths "${user}/${host}.nix";
@@ -92,14 +83,9 @@
         then host_config
         else getHmPaths "home.nix";
 
-      # for raw home-manager configurations
       mkHome = username: host: {
         "${username}@${host}" = inputs.home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          # Specify the path to your home configuration here
-          # configuration = import (maybeUserConfig username host) {
-          #   inherit inputs pkgs;
-          # };
 
           modules = baseModules ++ [(maybeUserConfig username host)];
           extraSpecialArgs = {
@@ -107,28 +93,9 @@
             inherit (inputs.self) scripts;
             inherit username host;
           };
-          # extraModules = [ ./home/standalone.nix ];
         };
       };
     in
       pkgs.lib.foldr (a: b: a // b) {} (pkgs.lib.concatMap (user: (pkgs.lib.concatMap (host: [(mkHome user host)]) hosts)) users);
-    # "markus@arch-desktop" = inputs.home-manager.lib.homeManagerConfiguration {
-    #   inherit pkgs;
-    #   extraSpecialArgs = {scripts = scripts;};
-    #   modules = baseModules ++ (getHmPaths ["markus/home.nix" "modules/archConfig.nix"]);
-    # };
-    # "markus@nixos-desktop" = inputs.home-manager.lib.homeManagerConfiguration {
-    #   inherit pkgs;
-    #   extraSpecialArgs = {scripts = scripts;};
-    #   modules = baseModules ++ (getHmPaths ["markus/home.nix" "modules/nixosConfig.nix"]);
-    # };
-    # "talita@arch-desktop" = inputs.home-manager.lib.homeManagerConfiguration {
-    #   inherit pkgs;
-    #   modules = baseModules ++ [inputs.plasma-manager.homeManagerModules.plasma-manager] ++ (getHmPaths ["guest/home.nix" "modules/archConfig.nix"]);
-    # };
-    # "talita@nixos-desktop" = inputs.home-manager.lib.homeManagerConfiguration {
-    #   inherit pkgs;
-    #   modules = baseModules ++ [inputs.plasma-manager.homeManagerModules.plasma-manager] ++ (getHmPaths ["guest/home.nix" "modules/nixosConfig.nix"]);
-    # };
   };
 }

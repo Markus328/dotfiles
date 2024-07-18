@@ -10,7 +10,7 @@
   ];
   home.username = username;
   home.homeDirectory = "/home/${username}";
-  home.stateVersion = "23.05";
+  home.stateVersion = "22.05";
   programs.zsh = {
     enable = true;
     dotDir = ".config/zsh";
@@ -22,4 +22,5 @@
     enableZshIntegration = true;
   };
   programs.home-manager.enable = true;
+
 }

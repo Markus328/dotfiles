@@ -11,22 +11,8 @@ set $term footclient
 set $menu wofi -S drun
 
 
-output HDMI-A-1 {
-  pos 0 0
-	mode 1440x900@60Hz
-		adaptive_sync on
-		scale_filter linear
-		max_render_time off
-
-}
-
-exec swaymsg create_output
 
 # # headless output to use VNC
-output HEADLESS-1 {
-  pos 8000 4000
-  mode 1440x900
-}
 focus_follows_mouse always
 focus_on_window_activation smart
 

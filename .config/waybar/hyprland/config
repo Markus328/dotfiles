@@ -7,7 +7,7 @@
     "margin-left": 4,
     "modules-left": ["hyprland/workspaces","hyprland/mode"],
     "modules-center": ["hyprland/window"],
-    "modules-right": ["idle_inhibitor","custom/spacing", "cpu","custom/spacing", "memory","custom/spacing","pulseaudio","custom/spacing","network","custom/spacing", "clock","custom/spacing", "tray"],
+    "modules-right": ["idle_inhibitor","custom/spacing", "cpu","custom/spacing", "memory","custom/spacing","pulseaudio","custom/spacing", "battery","custom/spacing","network","custom/spacing", "clock","custom/spacing", "tray"],
     // Modules configuration
      "hyprland/workspaces": {
          "disable-scroll": true,
@@ -97,6 +97,23 @@
 	"on-click-right": "nm-connection-editor"
 
     },
+
+"battery": {
+	"bat": "BAT0",
+	"interval": 60,
+	"states": {
+    "high": 80, 
+	  "med": 40,
+		"low": 15,
+    "critical": 5
+	},
+	"format": "{capacity}% {icon}",
+	"format-icons": {
+  "discharging": ["", "", "", "", ""],
+  "charging": ""
+  },
+	"max-length": 25
+},
     "pulseaudio": {
 	"states": {
 		"full": 90,
@@ -104,6 +121,7 @@
 		"med": 30,
 		
 	},
+  
 	"margin-left": 0,
         "scroll-step": 1.5, // %, can be a float
         "format": "{volume}% {icon}",

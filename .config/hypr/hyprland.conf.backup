@@ -1,0 +1,272 @@
+
+
+#
+# Please note not all available settings / options are set here.
+# For a full list, see the wiki
+#
+
+
+# See https://wiki.hyprland.org/Configuring/Monitors/
+
+# exec-once = hyprctl output create headless
+
+monitor=HDMI-A-1,preferred,0x0,1
+monitor=eDP-1,preferred,0x0, 1.25
+monitor=Virtual-1,preferred,0x0,1.333
+# monitor=HEADLESS-2,disable,1440x900,10e00x10000,1
+
+# See https://wiki.hyprland.org/Configuring/Keywords/ for more
+
+# Execute your favorite apps at launch
+
+# Source a file (multi-file configs)
+# source = ~/.config/hypr/myColors.conf
+
+# For all categories, see https://wiki.hyprland.org/Configuring/Variables/
+input {
+    kb_layout = workman, br
+    kb_options = grp:ctrls_toggle, ctrl:swapcaps
+    kb_variant = ,abnt2
+    kb_rules = 
+    kb_model =
+
+    repeat_rate = 30
+    repeat_delay = 300
+    follow_mouse = 2
+    mouse_refocus = false
+    float_switch_override_focus = 0
+
+    touchpad {
+    natural_scroll = true
+    scroll_factor = 0.7
+    }
+
+
+    sensitivity = 0.5 # -1.0 - 1.0, 0 means no modification.
+}
+
+gestures {
+
+    workspace_swipe = true
+    workspace_swipe_distance = 800
+    workspace_swipe_cancel_ratio = 0.5
+    workspace_swipe_min_speed_to_force = 300
+
+    workspace_swipe_fingers = 3
+
+}
+
+general {
+    # See https://wiki.hyprland.org/Configuring/Variables/ for more
+    gaps_in = 5
+    gaps_out = 10
+    border_size = 1
+    col.active_border = rgba(33ccffee)
+    col.inactive_border = rgba(595959aa)
+    layout = dwindle
+}
+
+decoration {
+    # See https://wiki.hyprland.org/Configuring/Variables/ for more
+    rounding = 5
+    blur {
+    passes = 1
+    size = 5
+    brightness = 0.8
+    noise = 0.02
+    }
+
+    drop_shadow = false
+}
+
+animations {
+
+    bezier = myBezier, 0, 0.21, 1, 0.02
+    animation = windows, 1, 2, default, slide
+    animation = windowsOut, 1, 2, default, popin 80%
+    animation = border, 1, 2, default
+    animation = borderangle, 1, 8, default
+    animation = fade, 1, 2, default
+    animation = workspaces, 1, 2, myBezier, slide
+
+    # Some default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
+
+} 
+dwindle {
+    # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
+    pseudotile = yes # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
+    preserve_split = yes # you probably want this
+    no_gaps_when_only = true
+}
+
+master {
+    # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
+    new_is_master = true
+}
+
+
+# Example per-device config
+# See https://wiki.hyprland.org/Configuring/Keywords/#executing for more
+
+# Example windowrule v1
+# windowrule = float, ^(kitty)$
+# Example windowrule v2
+# windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
+# See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+
+
+# See https://wiki.hyprland.org/Configuring/Keywords/ for more
+$mainMod = SUPER
+
+exec-once = dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY
+exec-once = volumectl init
+exec = hyprctl setcursor "${XCURSOR_THEME}" "${XCURSOR_SIZE}"
+exec-once = foot --server
+exec-once = com.nextcloud.desktopclient.nextcloud --background
+exec-once = flatpak run org.keepassxc.KeePassXC
+exec-once = hypridle
+$barpath = ~/.config/waybar/hyprland
+exec-once = waybar -c $barpath/config -s $barpath/style.css
+exec-once = hyprpaper
+
+# Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
+#
+bindl = CTRL ALT, End, exec, sytemctl poweroff -i
+bindl = CTRL ALT, Home, exec, systemctl hibernate -i
+bindl = CTRL ALT, Insert, exec, systemctl suspend -i
+bindl = CTRL ALT, Delete, exec, systemctl reboot -i
+bindl = CTRL ALT, Prior, exec, loginctl lock-session
+
+binde = CTRL, equal, exec, volumectl up 5 
+binde = CTRL, minus, exec, volumectl down 5
+bind = CTRL, slash, exec, source ~/.config/util/mpv/shell_setup.sh && mwatch $(wl-paste) >/dev/null
+bind = CTRL ALT, A, exec, footclient
+bind = CTRL, E, exec, fuzzel-kill
+bind = CTRL, O, exec, footclient -T "fzf-finder" fzf-finder
+bind = CTRL ALT, E, exec, telegram-desktop
+bind = CTRL ALT, C, exec, hyprctl reload
+bind = $mainMod, D, killactive, 
+bind = $mainMod, T, fullscreen, 0 
+bindl = CTRL ALT, R, exit, 
+bind = $mainMod , Space, togglefloating, 
+bind = $mainMod, H, exec, fuzzel 
+bind = $mainMod, P, pseudo, # dwindle
+bind = $mainMod, J, togglesplit, # dwindle
+bind = $mainMod, S, togglegroup, # dwindle
+bind = $mainMod, C, moveoutofgroup, # dwindle
+bind = $mainMod, R, lockgroups, toggle # dwindle
+bind = $mainMod, F, changegroupactive, b # dwindle
+bind = $mainMod, U, changegroupactive, f # dwindle
+$print = print-wlroots
+bind = SHIFT, Print, exec, $print area
+bind = , Print, exec, $print
+bind = CTRL SHIFT, Print, exec, $print area copy
+bind = CTRL, Print, exec, $print copy
+
+# Move focus with mainMod + arrow keys
+bind = $mainMod, Y, movefocus, l
+bind = $mainMod, Y, bringactivetotop,
+bind = $mainMod, O, movefocus, r
+bind = $mainMod, O, bringactivetotop,
+bind = $mainMod, E, movefocus, u
+bind = $mainMod, E, bringactivetotop,
+bind = $mainMod, N, movefocus, d
+bind = $mainMod, N, bringactivetotop,
+bind = $mainMod SHIFT, Y, movewindow, l
+bind = $mainMod SHIFT, O, movewindow, r
+bind = $mainMod SHIFT, E, movewindow, u
+bind = $mainMod SHIFT, N, movewindow, d
+
+# Switch workspaces with mainMod + [0-9]
+bind = CTRL, 1, workspace, 1
+bind = CTRL, 2, workspace, 2
+bind = CTRL, 3, workspace, 3
+bind = CTRL, 4, workspace, 4
+bind = CTRL, 5, workspace, 5
+bind = CTRL, 6, workspace, 6
+bind = CTRL, 7, workspace, 7
+bind = CTRL, 8, workspace, 8
+bind = CTRL, 9, workspace, 9
+bind = CTRL, 0, workspace, 10
+
+bind = $mainMod, L, submap, mark
+submap=mark
+
+bind = , y, togglespecialworkspace, keepass
+bind = , y, submap, reset
+bind = , e, togglespecialworkspace, telegram
+bind = , e, submap, reset
+bind = , n, togglespecialworkspace, firefox
+bind = , n, submap, reset
+bind = , f, togglespecialworkspace, waydroid
+bind = , f, submap, reset
+bind = SHIFT, y, movetoworkspacesilent, special:keepass
+bind = SHIFT, y, submap, reset
+bind = SHIFT, e, movetoworkspacesilent, special:telegram
+bind = SHIFT, e, submap, reset
+bind = SHIFT, n, movetoworkspacesilent, special:firefox
+bind = SHIFT, n, submap, reset
+
+submap=reset
+
+# Move active window to a workspace with mainMod + SHIFT + [0-9]
+bind = CTRL SHIFT, 1, movetoworkspacesilent, 1
+bind = CTRL SHIFT, 2, movetoworkspacesilent, 2
+bind = CTRL SHIFT, 3, movetoworkspacesilent, 3
+bind = CTRL SHIFT, 4, movetoworkspacesilent, 4
+bind = CTRL SHIFT, 5, movetoworkspacesilent, 5
+bind = CTRL SHIFT, 6, movetoworkspacesilent, 6
+bind = CTRL SHIFT, 7, movetoworkspacesilent, 7
+bind = CTRL SHIFT, 8, movetoworkspacesilent, 8
+bind = CTRL SHIFT, 9, movetoworkspacesilent, 9
+bind = CTRL SHIFT, 0, movetoworkspacesilent, 10
+bind = $mainMod SHIFT, Space, movetoworkspacesilent, +0
+bind = $mainMod, comma, movetoworkspacesilent, special:dirty
+bind = $mainMod, period, togglespecialworkspace, dirty
+
+# Scroll through existing workspaces with mainMod + scroll
+bind = $mainMod, mouse_down, workspace, e+1
+bind = $mainMod, mouse_up, workspace, e-1
+
+# Move/resize windows with mainMod + LMB/RMB and dragging
+bindm = $mainMod, mouse:272, movewindow
+bindm = $mainMod, mouse:273, resizewindow
+
+
+windowrulev2 = float,class:^(footclient)$
+windowrulev2 = float,class:^(org\.keepassxc\..+)
+windowrulev2 = workspace special:keepass,class:^(org\.keepassxc\..+)
+windowrulev2 = workspace special:keepass,class:^(com\.nextcloud\..+)
+windowrulev2 = float,class:io.github.tdesktop_x64.TDesktop
+windowrulev2 = size 70% 70%,class:org.telegram.desktop
+windowrulev2 = center,class:org.telegram.desktop
+windowrulev2 = workspace special:telegram,class:io.github.tdesktop_x64.TDesktop
+windowrulev2 = idleinhibit focus,class:.scrcpy-wrapped|scrcpy
+windowrulev2 = idleinhibit focus,class:com.stremio.stremio
+
+
+windowrulev2 = float, title:XtMapper
+windowrulev2 = move 0 0, title:XtMapper
+windowrulev2 = size 100% 100%, title:XtMapper
+windowrulev2 = opacity 0, title:XtMapper
+windowrulev2 = noblur, title:XtMapper
+# windowrulev2 = pin, title:XtMapper
+windowrulev2 = workspace 9, title:XtMapper
+
+
+
+misc {
+vfr = true
+vrr = 0
+disable_autoreload = false
+no_direct_scanout = false
+disable_hyprland_logo = true
+disable_splash_rendering = true
+enable_swallow = true
+swallow_regex = footclient
+allow_session_lock_restore = true
+}
+debug {
+manual_crash = 0
+}
+

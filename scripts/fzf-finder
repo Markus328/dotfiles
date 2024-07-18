@@ -26,12 +26,12 @@ show_fzf() {
 		--bind "ctrl-t:reload(fd_command  -d $dir -- -t d -t f)+execute-silent(echo '-t d -t f' > $FD_ARGS)" \
 		--bind "ctrl-w:reload(fd_command -d $dir -- -t f)+execute-silent(echo '-t f' > $FD_ARGS)" \
 		--bind "ctrl-d:execute-silent(rm -f {} || rmdir {})+reload(fd_command -d $dir -- \$(cat $FD_ARGS))" \
-		--bind "ctrl-l:execute($EDITOR {} >&2)" \
-		--bind "ctrl-f:execute(echo -e '{q}\n..')+abort" \
-		--bind "ctrl-p:execute(echo -e '\n{q}')+abort" \
+		--bind "ctrl-l:execute($EDITOR {})" \
+		--bind "ctrl-f:become:echo '{q}\n..'; exit 1" \
+		--bind "ctrl-p:become:echo '\n{q}'; exit 1" \
 		--prompt="$(realpath -s $dir) > " \
 		--query="$(cat $LAST_QUERY)" \
-		--print-query
+		--print-query 2>&1
 }
 search() {
 	export FZF_DEFAULT_COMMAND="fd_command -d $dir -- $(cat $FD_ARGS)"

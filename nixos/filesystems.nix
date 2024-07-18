@@ -4,12 +4,6 @@
 {...}: {
   ##IMPURITIES: filesystem - add/remove/subs according the current hardware
   #SWAP
-  swapDevices = [
-    {
-      label = "swap8G";
-      priority = 0;
-    }
-  ];
   zramSwap = {
     enable = true;
     # numDevices = 4;
@@ -20,64 +14,24 @@
 
   #FILESYSTEM
   fileSystems = let
-    options = ["rw" "noatime" "ssd" "space_cache=v2"];
+    options = ["rw" "noatime" "space_cache=v2" "nodiscard"];
     compress.options = options ++ ["compress-force=zstd"];
-    label = "root";
+    device = "/dev/disk/by-uuid/5bdf738b-59cc-41ab-bdfb-91d52e83c4d7";
     fsType = "btrfs";
   in {
     "/" = {
-      inherit label;
-      options = compress.options ++ ["subvol=/nixos/@"];
+      inherit device;
+      options = compress.options ++ ["subvol=/@"];
       inherit fsType;
     };
     "/nix" = {
-      inherit label;
+      inherit device;
       options = compress.options ++ ["subvol=/@nix"];
       inherit fsType;
     };
-    "/var/lib/flatpak" = {
-      inherit label;
-      options = compress.options ++ ["subvol=/@flatpak"];
-      inherit fsType;
-    };
-    "/userdata" = {
-      inherit label;
-      options = compress.options ++ ["subvol=/@userdata"];
-      inherit fsType;
-    };
     "/home" = {
-      inherit label;
+      inherit device;
       options = compress.options ++ ["subvol=@home"];
-      inherit fsType;
-    };
-    "/.snapshots" = {
-      inherit label;
-      options = compress.options ++ ["subvol=/snapshots/root/@nixos"];
-      inherit fsType;
-    };
-    "/home/.snapshots" = {
-      inherit label;
-      options = compress.options ++ ["subvol=/snapshots/@home"];
-      inherit fsType;
-    };
-    # "/special" = {
-    #   inherit device;
-    #   options = options ++ [ "subvol=/@special" ];
-    #   inherit fsType;
-    # };
-    "/userdata/@dotfiles/.snapshots" = {
-      inherit label;
-      options = compress.options ++ ["subvol=/snapshots/@dotfiles"];
-      inherit fsType;
-    };
-    "/userdata/@workspace/.snapshots" = {
-      inherit label;
-      options = compress.options ++ ["subvol=/snapshots/@workspace"];
-      inherit fsType;
-    };
-    "/userdata/@games" = {
-      label = "games";
-      options = compress.options;
       inherit fsType;
     };
   };

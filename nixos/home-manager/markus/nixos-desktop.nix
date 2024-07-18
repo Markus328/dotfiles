@@ -5,26 +5,13 @@
 }: {
   imports = [
     ../nixos-desktop.nix
-    ./home.nix
+    ./desktop.nix
   ];
 
-  nixpkgs.overlays = [
-    (self: super: {
-      waybar = super.waybar.overrideAttrs (oldAttrs: {
-        mesonFlags = oldAttrs.mesonFlags ++ ["-Dexperimental=true"];
-      });
-    })
-  ];
+  services.syncthing.enable = true;
 
-  services.gnome-keyring.enable = true;
   home.packages = with pkgs; [
-    gcr
-    waybar
-    wofi
-    swaybg
-    swayidle
-    hyprlock
-    hypridle
-    libnotify
+    stremio
+    heroic
   ];
 }

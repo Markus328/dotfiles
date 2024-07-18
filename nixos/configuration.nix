@@ -14,15 +14,25 @@
   ];
 
   #NIX
-  nix.settings = {
-    experimental-features = ["nix-command" "flakes"];
-    auto-optimise-store = true;
-    substituters = ["https://hyprland.cachix.org"];
-    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+  nix = {
+    settings = {
+      experimental-features = ["nix-command" "flakes"];
+      auto-optimise-store = true;
+    };
   };
-  networking.interfaces.enp2s0.wakeOnLan.enable = true;
 
   ##IMPURITIES: boot - efi only grub
+
+  boot.initrd.enable = true;
+  # boot.initrd.extraFiles = {
+  #   "/bin/vtoydrivers".source = "${inputs.self.vtoyboot}";
+  #   "/bin/vtoydump".source = "${inputs.self.vtoyboot}";
+  #   "/bin/vtoypartx".source = "${inputs.self.vtoyboot}";
+  #   "/bin/vtoytool".source = "${inputs.self.vtoyboot}";
+  #   "/bin/vtoydmpatch".source = "${inputs.self.vtoyboot}";
+  # };
+  # boot.initrd.preDeviceCommands = "";
+  boot.initrd.postDeviceCommands = "ln -sf ${inputs.self.vtoyboot}/bin/* /bin && ventoy-setup";
   boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.kernelParams = ["mitigations=off"];
   boot.tmp.useTmpfs = true;
@@ -34,108 +44,41 @@
   #   "xxhash_generic"
   #   "btrfs"
   # ];
-  # boot.initrd.kernelModules = [
-  #   "xxhash_generic"
-  #   "btrfs"
-  # ];
+  boot.initrd.kernelModules = [
+    "efivarfs"
+  ];
   boot.loader = {
     efi = {
-      # canTouchEfiVariables = true;
       efiSysMountPoint = "/boot/efi"; ## Set yourself
+      # canTouchEfiVariables = true;
     };
     grub = {
       enable = true;
       efiInstallAsRemovable = true;
-      extraEntries = ''
-
-        menuentry 'Arch Linux' --class arch --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-simple-f9290bd8-1635-4fff-aa7f-8a422c3e5132' {
-        	load_video
-        	set gfxpayload=keep
-        	insmod gzio
-        	insmod part_gpt
-        	insmod btrfs
-        	set root='hd0,gpt3'
-        	if [ x$feature_platform_search_hint = xy ]; then
-        	  search --no-floppy --fs-uuid --set=root --hint-bios=hd0,gpt3 --hint-efi=hd0,gpt3 --hint-baremetal=ahci0,gpt3  f9290bd8-1635-4fff-aa7f-8a422c3e5132
-        	else
-        	  search --no-floppy --fs-uuid --set=root f9290bd8-1635-4fff-aa7f-8a422c3e5132
-        	fi
-        	echo	'Loading Linux linux-zen ...'
-        	linux	/arch/@/boot/vmlinuz-linux-zen root=UUID=f9290bd8-1635-4fff-aa7f-8a422c3e5132 rw rootflags=subvol=arch/@  loglevel=3 quiet
-        	echo	'Loading initial ramdisk ...'
-        	initrd	/arch/@/boot/intel-ucode.img /arch/@/boot/initramfs-linux-zen.img
-        }
-        submenu 'Advanced options for Arch Linux' $menuentry_id_option 'gnulinux-advanced-f9290bd8-1635-4fff-aa7f-8a422c3e5132' {
-        	menuentry 'Arch Linux, with Linux linux-zen' --class arch --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-linux-zen-advanced-f9290bd8-1635-4fff-aa7f-8a422c3e5132' {
-        		load_video
-        		set gfxpayload=keep
-        		insmod gzio
-        		insmod part_gpt
-        		insmod btrfs
-        		set root='hd0,gpt3'
-        		if [ x$feature_platform_search_hint = xy ]; then
-        		  search --no-floppy --fs-uuid --set=root --hint-bios=hd0,gpt3 --hint-efi=hd0,gpt3 --hint-baremetal=ahci0,gpt3  f9290bd8-1635-4fff-aa7f-8a422c3e5132
-        		else
-        		  search --no-floppy --fs-uuid --set=root f9290bd8-1635-4fff-aa7f-8a422c3e5132
-        		fi
-        		echo	'Loading Linux linux-zen ...'
-        		linux	/arch/@/boot/vmlinuz-linux-zen root=UUID=f9290bd8-1635-4fff-aa7f-8a422c3e5132 rw rootflags=subvol=arch/@  loglevel=3 quiet
-        		echo	'Loading initial ramdisk ...'
-        		initrd	/arch/@/boot/intel-ucode.img /arch/@/boot/initramfs-linux-zen.img
-        	}
-        	menuentry 'Arch Linux, with Linux linux-zen (fallback initramfs)' --class arch --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-linux-zen-fallback-f9290bd8-1635-4fff-aa7f-8a422c3e5132' {
-        		load_video
-        		set gfxpayload=keep
-        		insmod gzio
-        		insmod part_gpt
-        		insmod btrfs
-        		set root='hd0,gpt3'
-        		if [ x$feature_platform_search_hint = xy ]; then
-        		  search --no-floppy --fs-uuid --set=root --hint-bios=hd0,gpt3 --hint-efi=hd0,gpt3 --hint-baremetal=ahci0,gpt3  f9290bd8-1635-4fff-aa7f-8a422c3e5132
-        		else
-        		  search --no-floppy --fs-uuid --set=root f9290bd8-1635-4fff-aa7f-8a422c3e5132
-        		fi
-        		echo	'Loading Linux linux-zen ...'
-        		linux	/arch/@/boot/vmlinuz-linux-zen root=UUID=f9290bd8-1635-4fff-aa7f-8a422c3e5132 rw rootflags=subvol=arch/@  loglevel=3 quiet
-        		echo	'Loading initial ramdisk ...'
-        		initrd	/arch/@/boot/intel-ucode.img /arch/@/boot/initramfs-linux-zen-fallback.img
-        	}
-        }
-
-      '';
       efiSupport = true;
       device = "nodev";
     };
   };
   ##
 
+  time.hardwareClockInLocalTime = true;
+  # services.chrony.enable = true;
   #SYSTEMD
   systemd = {
     ##IMPURITIES - snapshot service
     services = {
-      intel-gpu-frequency = {
+      rfkill-unblock-all = {
         enable = true;
-        description = "Set gpu frequency to max for better hyprland reponsiveness";
+        description = "Unblock all hardware devices";
         serviceConfig = {
-          type = "oneshot";
-          ExecStart = "${pkgs.intel-gpu-tools}/bin/intel_gpu_frequency --max";
-          RemainAfterExit = "yes";
+          ExecStart = "rfkill unblock all";
         };
-        wantedBy = ["multi-user.target"];
       };
       auto-gc = {
         enable = true;
         description = "collect nix garbage";
         serviceConfig = {
           ExecStart = "nix-collect-garbage";
-        };
-      };
-      snapshots = {
-        enable = true;
-        path = with pkgs; [bashInteractive btrfs-progs];
-        description = "Do a root and home snapshot";
-        serviceConfig = {
-          ExecStart = "${inputs.self.scripts.snapshots}/bin/snapshots -r"; ## set the correct path of the script
         };
       };
     };
@@ -150,15 +93,6 @@
         };
         wantedBy = ["auto-gc.target"];
       };
-      snapshots = {
-        enable = true;
-        description = "Timer to run snapshots.service at 9:00:00 and and 17:00:00";
-        timerConfig = {
-          OnCalendar = "*-*-* 9,17:00:00";
-          Persistent = true;
-        };
-        wantedBy = ["snapshots.target"];
-      };
     };
     ##
   };
@@ -168,36 +102,34 @@
     enable = true;
     settings.PasswordAuthentication = false;
   };
-  services.xserver = {
+  services.tlp = {
     enable = true;
-    excludePackages = with pkgs; [xterm];
+    settings = {
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
 
-    layout = "us,br";
-    xkbVariant = "workman,abnt2";
-    xkbOptions = "grp:win_space_toggle";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
 
-    displayManager.lightdm.enable = false;
-    displayManager.startx.enable = true;
-    desktopManager.plasma5.enable = true;
-    libinput.enable = true;
-  };
-  fonts = {
-    packages = with pkgs; [
-      noto-fonts
-      noto-fonts-cjk
-      noto-fonts-emoji
-      font-awesome
-      (nerdfonts.override {fonts = ["FiraCode" "DroidSansMono" "Monofur"];})
-    ];
-    fontDir.enable = true;
+      #Optional helps save long term battery health
+      START_CHARGE_THRESH_BAT0 = 60; # 40 and bellow it starts to charge
+      STOP_CHARGE_THRESH_BAT0 = 80; # 80 and above it stops charging
+    };
   };
 
   programs.zsh.enable = true;
   programs.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    package = pkgs.hyprland;
   };
-  security.pam.services.swaylock = {};
+  security.pam.loginLimits = [
+    {
+      domain = "@users";
+      item = "rtprio";
+      type = "-";
+      value = 1;
+    }
+  ];
   security.pam.services.gnome-keyring.text = with pkgs; ''
     auth     optional    ${gnome3.gnome-keyring}/lib/security/pam_gnome_keyring.so
     session  optional    ${gnome3.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
@@ -212,11 +144,6 @@
       isNormalUser = true;
       extraGroups = ["wheel" "markus"]; # Enable ‘sudo’ for the user.
     };
-    talita = {
-      shell = pkgs.zsh;
-      isNormalUser = true;
-      extraGroups = ["wheel" "talita"];
-    };
     root.shell = pkgs.zsh;
   };
 
@@ -228,37 +155,39 @@
     zip
     unzip
     compsize
-    xdg-desktop-portal-kde
     xdg-desktop-portal-gtk
     patchelf
     microcodeIntel
     # python38
     firefox
-
-    wineWowPackages.unstable
-    podman
-    # flatpak
   ];
 
-  services.flatpak.enable = true;
   #EXTRA
-  networking.hostName = "nixos-desktop"; # Define your hostname.
+  networking.hostName = "nixos-portable"; # Define your hostname.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
   time.timeZone = "America/Fortaleza";
 
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
-    };
-  };
+  # nixpkgs.config = {
+  #   packageOverrides = pkgs: {
+  #     vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+  #   };
+  # };
   hardware.opengl = {
     enable = true;
     driSupport32Bit = true;
     extraPackages = with pkgs; [
-      # intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      intel-media-driver # LIBVA_DRIVER_NAME=iHD
     ];
   };
+
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true;
+  hardware.bluetooth.settings = {
+    General = {
+      Experimental = true;
+    };
+  };
+  services.blueman.enable = true;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -267,9 +196,12 @@
     pulse.enable = true;
     jack.enable = true;
   };
-  virtualisation = {
-    waydroid.enable = true;
-    lxd.enable = true;
+
+  virtualisation.virtualbox.guest = {
+    enable = true;
+    seamless = true;
+    draganddrop = true;
+    clipboard = true;
   };
 
   # This value determines the NixOS release from which the default

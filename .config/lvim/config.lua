@@ -148,6 +148,7 @@ lvim.lsp.automatic_configuration.skipped_servers = {
 	"pylyzer",
 }
 require("lspconfig").clangd.setup({})
+require("lspconfig").nil_ls.setup({})
 lvim.lsp.automatic_servers_installation = false
 -- local opts = {} -- check the lspconfig documentation for a list of all possible options
 -- require("lvim.lsp.manager").setup("pyright", opts)
@@ -196,10 +197,6 @@ linters.setup({
 	},
 })
 
-lvim.lsp.servers = {
-	name = "rnix",
-	cmd = { "rnix-lsp" },
-}
 -- -- Additional Plugins <https://www.lunarvim.org/docs/plugins#user-plugins>
 lvim.plugins = {
   {
@@ -208,8 +205,12 @@ lvim.plugins = {
   config = function () require("glow").setup() end
   
 
-  -- build = "yay -S glow"
 },
+  {
+"marcelofern/vale.nvim",
+    ft = {"markdown"},
+  config = function () require("vale").setup() end
+  },
 }
 -- lvim.builtin.telescope.on_config_done = function(telescope)
 --   pcall(telescope.load_extension, "glow")
