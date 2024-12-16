@@ -1,8 +1,4 @@
-{
-  pkgs,
-  bubblewrap ? false,
-  ...
-}:
+{pkgs, ...}:
 with pkgs; let
   version = "1.0.31";
   iso_name = "vtoyboot-${version}.iso";
@@ -51,13 +47,4 @@ with pkgs; let
     '';
   };
 in
-  if bubblewrap
-  then
-    buildFHSEnv {
-      name = "vtoyboot-fhs";
-      targetPkgs = pkgs: (with pkgs; [
-        vtoyboot
-      ]);
-      runScript = "bash";
-    }
-  else vtoyboot
+  vtoyboot

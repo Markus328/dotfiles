@@ -5,5 +5,9 @@ background-color=#4444AA99
 anchor=bottom-right
 max-visible=3
 sort=+time
+
+on-button-left=exec makoctl menu -n "$id" fuzzel -p "Select action: " --dmenu
+
+
 [mode=do-not-disturb]
 invisible=1

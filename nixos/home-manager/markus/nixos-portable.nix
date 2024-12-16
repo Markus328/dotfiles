@@ -18,6 +18,10 @@
     settings = {
       decoration.blur.enabled = false;
       animations.enabled = false;
+      monitor = [
+        "desc:XXW HDMI,1440x900,0x0,1"
+        "eDP-1,preferred,1440x276, 1.33"
+      ];
     };
   };
   home.packages = with pkgs;
@@ -37,5 +41,6 @@
       volumectl
       distrobox-delta
       fuzzel-kill
+      vnc
     ]);
 }

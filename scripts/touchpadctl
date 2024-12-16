@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+hypr() {
+  hyprctl -i 0 "$@"
+}
+
+check_session() {
+  hypr version >/dev/null 2>&1
+  if ! [[ $? -eq 0 ]]; then
+    echo "No hyprland session found. Exiting..." >&2
+    exit 3
+  fi
+}
+
+get_touchpad_device() {
+  dev=$(hypr devices | grep -Eo "[^ ]+touchpad")
+  if ! [[ "$dev" ]]; then
+    echo "No touchpad device was found." >&2
+    exit 3
+  fi
+  echo $dev
+}
+
+check_session
+
+ACTION="$1"
+TOUCHPAD_DEVICE=$(get_touchpad_device)
+
+echo "Considering $TOUCHPAD_DEVICE as touchpad."
+
+case $ACTION in 
+  enable)
+    echo "enabling touchpad..."
+    hypr keyword "device[$TOUCHPAD_DEVICE]:enabled" true
+    ;;
+  disable)
+    echo "disabling touchpad..."
+    hypr keyword "device[$TOUCHPAD_DEVICE]:enabled" false
+    ;;
+esac

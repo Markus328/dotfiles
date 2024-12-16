@@ -24,4 +24,6 @@ in rec {
   distrobox-delta = importScript "distrobox-delta" [distrobox bindfs];
 
   vnc = importScript "vnc" [jq wayvnc];
+
+  touchpadctl = importScript "touchpadctl" [hyprland];
 }

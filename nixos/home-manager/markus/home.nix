@@ -12,6 +12,8 @@
     enableZshIntegration = true;
     nix-direnv.enable = true;
   };
+
+  services.syncthing.enable = true;
   home.packages = with pkgs; [
     foot
     tmux
@@ -30,6 +32,10 @@
 
     mpv
     imv
+
+    octaveFull
+    _64gram
+    pavucontrol
   ];
 
   home.sessionVariables = {
@@ -46,5 +52,7 @@
     "text/x-lua" = ["lvim.desktop"];
     "text/x-c++src" = ["lvim.desktop"];
     "text/x-chdr" = ["lvim.desktop"];
+    "text/markdown" = ["obsidian.desktop"];
   };
+
 }

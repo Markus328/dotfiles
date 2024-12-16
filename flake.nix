@@ -50,11 +50,8 @@
       inherit pkgs;
       scriptsPath = ./scripts;
     };
+
     vtoyboot = import ./scripts/vtoyboot/vtoy.nix {inherit pkgs;};
-    vtoyboot-fhs = import ./scripts/vtoyboot/vtoy.nix {
-      inherit pkgs;
-      bubblewrap = true;
-    };
     homeConfigurations = let
       prefix = ./nixos/home-manager;
       getHmPaths = paths:

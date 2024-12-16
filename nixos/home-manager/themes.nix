@@ -23,7 +23,7 @@ in {
       ];
       fonts = [
         noto-fonts
-        noto-fonts-cjk
+        noto-fonts-cjk-sans
         noto-fonts-emoji
         fantasque-sans-mono
         font-awesome

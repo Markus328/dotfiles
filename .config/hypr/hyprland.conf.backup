@@ -10,9 +10,6 @@
 
 # exec-once = hyprctl output create headless
 
-monitor=HDMI-A-1,preferred,0x0,1
-monitor=eDP-1,preferred,0x0, 1.25
-monitor=Virtual-1,preferred,0x0,1.333
 # monitor=HEADLESS-2,disable,1440x900,10e00x10000,1
 
 # See https://wiki.hyprland.org/Configuring/Keywords/ for more
@@ -152,7 +149,22 @@ bind = $mainMod, H, exec, fuzzel
 bind = $mainMod, P, pseudo, # dwindle
 bind = $mainMod, J, togglesplit, # dwindle
 bind = $mainMod, S, togglegroup, # dwindle
-bind = $mainMod, C, moveoutofgroup, # dwindle
+bind = $mainMod, C, submap, movegroup # dwindle
+
+submap=movegroup
+
+bind = , y, movewindoworgroup, l
+bind = , o, movewindoworgroup, r
+bind = , n, movewindoworgroup, d
+bind = , e, movewindoworgroup, u
+
+bind = , y, submap, reset
+bind = , o, submap, reset
+bind = , n, submap, reset
+bind = , e, submap, reset
+
+submap=reset
+
 bind = $mainMod, R, lockgroups, toggle # dwindle
 bind = $mainMod, F, changegroupactive, b # dwindle
 bind = $mainMod, U, changegroupactive, f # dwindle
@@ -188,6 +200,7 @@ bind = CTRL, 8, workspace, 8
 bind = CTRL, 9, workspace, 9
 bind = CTRL, 0, workspace, 10
 
+
 bind = $mainMod, L, submap, mark
 submap=mark
 
@@ -199,6 +212,7 @@ bind = , n, togglespecialworkspace, firefox
 bind = , n, submap, reset
 bind = , f, togglespecialworkspace, waydroid
 bind = , f, submap, reset
+
 bind = SHIFT, y, movetoworkspacesilent, special:keepass
 bind = SHIFT, y, submap, reset
 bind = SHIFT, e, movetoworkspacesilent, special:telegram
@@ -232,6 +246,7 @@ bindm = $mainMod, mouse:272, movewindow
 bindm = $mainMod, mouse:273, resizewindow
 
 
+windowrulev2 = float,title:.*- Google Accounts.*
 windowrulev2 = float,class:^(footclient)$
 windowrulev2 = float,class:^(org\.keepassxc\..+)
 windowrulev2 = workspace special:keepass,class:^(org\.keepassxc\..+)
@@ -242,15 +257,9 @@ windowrulev2 = center,class:org.telegram.desktop
 windowrulev2 = workspace special:telegram,class:io.github.tdesktop_x64.TDesktop
 windowrulev2 = idleinhibit focus,class:.scrcpy-wrapped|scrcpy
 windowrulev2 = idleinhibit focus,class:com.stremio.stremio
-
-
-windowrulev2 = float, title:XtMapper
-windowrulev2 = move 0 0, title:XtMapper
-windowrulev2 = size 100% 100%, title:XtMapper
-windowrulev2 = opacity 0, title:XtMapper
-windowrulev2 = noblur, title:XtMapper
-# windowrulev2 = pin, title:XtMapper
-windowrulev2 = workspace 9, title:XtMapper
+windowrulev2 = float, title:Bluetooth Devices
+windowrulev2 = float, title:Figure.*
+windowrulev2 = workspace special:dirty, title:Figure.*
 
 
 
@@ -258,7 +267,6 @@ misc {
 vfr = true
 vrr = 0
 disable_autoreload = false
-no_direct_scanout = false
 disable_hyprland_logo = true
 disable_splash_rendering = true
 enable_swallow = true

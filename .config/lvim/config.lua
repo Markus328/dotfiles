@@ -146,6 +146,7 @@ lvim.lsp.automatic_configuration.skipped_servers = {
 	"vtsls",
 	"vuels",
 	"pylyzer",
+  "matlab_ls",
 }
 require("lspconfig").clangd.setup({})
 require("lspconfig").nil_ls.setup({})
@@ -210,6 +211,16 @@ lvim.plugins = {
 "marcelofern/vale.nvim",
     ft = {"markdown"},
   config = function () require("vale").setup() end
+  },
+{
+    "Exafunction/codeium.vim",
+    config = function()
+      -- Set up keybindings for Codeium
+      vim.keymap.set('i', '<C-g>', function() return vim.fn['codeium#Accept']() end, { expr = true })
+      vim.keymap.set('i', '<M-l>', function() return vim.fn['codeium#CycleCompletions'](1) end, { expr = true })
+      vim.keymap.set('i', '<M-,>', function() return vim.fn['codeium#CycleCompletions'](-1) end, { expr = true })
+      vim.keymap.set('i', '<C-x>', function() return vim.fn['codeium#Clear']() end, { expr = true })
+    end,
   },
 }
 -- lvim.builtin.telescope.on_config_done = function(telescope)

@@ -21,6 +21,8 @@
       auto-optimise-store = true;
     };
   };
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = [];
 
   ##IMPURITIES: boot - efi only grub
 
@@ -66,6 +68,10 @@
   # services.chrony.enable = true;
   #SYSTEMD
   systemd = {
+    coredump.enable = true;
+    coredump.extraConfig = ''
+      MaxUse=256M
+    '';
     ##IMPURITIES - snapshot service
     services = {
       rfkill-unblock-all = {
@@ -82,6 +88,12 @@
           ExecStart = "nix-collect-garbage";
         };
       };
+      "touchpadctl@" = {
+        description = "Enable or disable touchpad in a Hyprland session";
+        serviceConfig = {
+          ExecStart = "${inputs.self.scripts.touchpadctl}/bin/touchpadctl %I";
+        };
+      };
     };
 
     timers = {
@@ -95,7 +107,6 @@
         wantedBy = ["auto-gc.target"];
       };
     };
-    ##
   };
 
   #DESKTOP
@@ -103,6 +114,17 @@
     enable = true;
     settings.PasswordAuthentication = false;
   };
+  services.tailscale.enable = true;
+
+  programs.adb.enable = true;
+  services.udev.packages = [
+    pkgs.android-udev-rules
+    (import ./udev_rules/touchpad-autodisable.nix {
+      inherit pkgs;
+      inherit (inputs.self.scripts) touchpadctl;
+    })
+  ];
+
   services.tlp = {
     enable = true;
     settings = {
@@ -132,10 +154,10 @@
     }
   ];
   security.pam.services.gnome-keyring.text = with pkgs; ''
-    auth     optional    ${gnome3.gnome-keyring}/lib/security/pam_gnome_keyring.so
-    session  optional    ${gnome3.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
+    auth     optional    ${gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
+    session  optional    ${gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
 
-    password  optional    ${gnome3.gnome-keyring}/lib/security/pam_gnome_keyring.so
+    password  optional    ${gnome.gnome-keyring}/lib/security/pam_gnome_keyring.so
   '';
 
   #USERS
@@ -143,7 +165,7 @@
     markus = {
       shell = pkgs.zsh;
       isNormalUser = true;
-      extraGroups = ["wheel" "markus"]; # Enable ‘sudo’ for the user.
+      extraGroups = ["wheel" "markus" "adbusers"]; # Enable ‘sudo’ for the user.
     };
     root.shell = pkgs.zsh;
   };
@@ -164,8 +186,13 @@
   ];
 
   #EXTRA
-  networking.hostName = "nixos-portable"; # Define your hostname.
-  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
+  networking = {
+    interfaces.wlan0.wakeOnLan = {
+      enable = true;
+    };
+    hostName = "nixos-portable"; # Define your hostname.
+    networkmanager.enable = true; # Easiest to use and most distros use this by default.
+  };
   time.timeZone = "America/Fortaleza";
 
   # nixpkgs.config = {
