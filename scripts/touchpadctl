@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-## This script allows to enable/disable the touchpad in hyprland sessions.
+## This script allows to enable/disable/toggle the touchpad in hyprland sessions.
 ## Each user has its own XDG_RUNTIME_DIR, so this script will
 ## run in all of them.
 ##
@@ -20,7 +20,7 @@ for_each_session() {
 			echo "----- Found XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR -----"
 			echo "----- Running for user: $user -----"
 			echo "----- Hyprland version: $session -----"
-			touchpad_action "$@"
+			touchpad_process_action "$@"
 		fi
 	done
 }
@@ -51,8 +51,25 @@ get_touchpad_device() {
 	echo $dev
 }
 
-# Does the actual touchpad action (enable/disable). Undefined action does nothing.
+# Does the actual touchpad action (enable/disable/toggle).
 touchpad_action() {
+	TOUCHPAD_DEVICE="$1"
+	TODO_ACTION="$2"
+
+	action_int=0 # 0 = disable, 1 = enable
+	[[ "$TODO_ACTION" == "enable" ]] && action_int=1
+	hypr keyword "device[$TOUCHPAD_DEVICE]:enabled" $action_int  # Enables/disables the touchpad
+	hypr keyword input:touchpad:disable_while_typing $action_int # Indicates if the touchpad is currently enabled or disabled
+
+	hypr notify 1 $notify_timeout "$notify_color" "Touchpad $TOUCHPAD_DEVICE ${TODO_ACTION}d by touchpadctl."
+	echo "Touchpad $TOUCHPAD_DEVICE ${TODO_ACTION}d"
+}
+
+# Processes the touchpad action and calls the touchpad_action function.
+# The 'toggle' action will only work correctly if there is only one touchpad device
+# (I really don't know why someone would have more than one). Due to a hyprctl issue.
+# https://github.com/hyprwm/Hyprland/issues/5724
+touchpad_process_action() {
 
 	ACTION="$1"
 	TOUCHPAD_DEVICE=$(get_touchpad_device)
@@ -63,28 +80,22 @@ touchpad_action() {
 
 	echo "Considering $TOUCHPAD_DEVICE as touchpad."
 
-	case $ACTION in
-	enable)
-		echo "enabling touchpad..."
-		hypr keyword "device[$TOUCHPAD_DEVICE]:enabled" true >/dev/null
-		;;
-	disable)
-		echo "disabling touchpad..."
-		hypr keyword "device[$TOUCHPAD_DEVICE]:enabled" false >/dev/null
-		;;
-	*)
-		return 3
-		;;
+	TODO_ACTION=$ACTION
+	if [ $ACTION == "toggle" ]; then
+		current_state=$(hypr getoption input:touchpad:disable_while_typing | grep "int: " | cut -d " " -f 2)
+		if [[ $current_state == "1" ]]; then
+			TODO_ACTION="disable"
+		else
+			TODO_ACTION="enable"
+		fi
+	fi
 
-	esac
-
-	echo "Touchpad $TOUCHPAD_DEVICE ${ACTION}d"
-	hypr notify 1 $notify_timeout "$notify_color" "Touchpad $TOUCHPAD_DEVICE ${ACTION}d by touchpadctl."
+	touchpad_action "$TOUCHPAD_DEVICE" "$TODO_ACTION"
 }
 
 action=$1
-if [[ "$action" != "enable" && "$action" != "disable" ]]; then
-	echo "Usage: $0 [enable|disable]" >&2
+if [[ "$action" != "enable" && "$action" != "disable" && "$action" != "toggle" ]]; then
+	echo "Usage: $0 [enable|disable|toggle]" >&2
 	exit 1
 fi
 
