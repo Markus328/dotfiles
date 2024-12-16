@@ -1,40 +1,91 @@
 #!/usr/bin/env bash
 
+## This script allows to enable/disable the touchpad in hyprland sessions.
+## Each user has its own XDG_RUNTIME_DIR, so this script will
+## run in all of them.
+##
+## Note that this script will only work for the first hyprland session running for each user.
+
+# enables/disables the touchpad for all hyprland sessions.
+
+notify_timeout=5000
+notify_color=blue
+
+for_each_session() {
+	for user in $(users); do
+		uid=$(id -u $user)
+		export XDG_RUNTIME_DIR=/run/user/$uid
+		if [[ -d $XDG_RUNTIME_DIR/hypr ]]; then
+			session=$(check_session) || continue
+			echo "----- Found XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR -----"
+			echo "----- Running for user: $user -----"
+			echo "----- Hyprland version: $session -----"
+			touchpad_action "$@"
+		fi
+	done
+}
+
+# Calls the hyprctl command for the first hyprland session.
 hypr() {
-  hyprctl -i 0 "$@"
+	hyprctl -i 0 "$@"
 }
 
+# Checks if a hyprland session is running.
 check_session() {
-  hypr version >/dev/null 2>&1
-  if ! [[ $? -eq 0 ]]; then
-    echo "No hyprland session found. Exiting..." >&2
-    exit 3
-  fi
+	session=$(hypr version)
+	if ! [[ $? -eq 0 ]]; then
+		echo "No hyprland session found." >&2
+		return 1
+	else
+		echo $session
+	fi
 }
 
+# Gets the touchpad device name.
 get_touchpad_device() {
-  dev=$(hypr devices | grep -Eo "[^ ]+touchpad")
-  if ! [[ "$dev" ]]; then
-    echo "No touchpad device was found." >&2
-    exit 3
-  fi
-  echo $dev
+	dev=$(hypr devices | grep -Eo "[^ ]+touchpad")
+	if ! [[ "$dev" ]]; then
+		echo "No touchpad device was found." >&2
+		return 2
+	fi
+	echo $dev
 }
 
-check_session
+# Does the actual touchpad action (enable/disable). Undefined action does nothing.
+touchpad_action() {
 
-ACTION="$1"
-TOUCHPAD_DEVICE=$(get_touchpad_device)
+	ACTION="$1"
+	TOUCHPAD_DEVICE=$(get_touchpad_device)
 
-echo "Considering $TOUCHPAD_DEVICE as touchpad."
+	if [ $? -ne 0 ]; then
+		return 2
+	fi
 
-case $ACTION in 
-  enable)
-    echo "enabling touchpad..."
-    hypr keyword "device[$TOUCHPAD_DEVICE]:enabled" true
-    ;;
-  disable)
-    echo "disabling touchpad..."
-    hypr keyword "device[$TOUCHPAD_DEVICE]:enabled" false
-    ;;
-esac
+	echo "Considering $TOUCHPAD_DEVICE as touchpad."
+
+	case $ACTION in
+	enable)
+		echo "enabling touchpad..."
+		hypr keyword "device[$TOUCHPAD_DEVICE]:enabled" true >/dev/null
+		;;
+	disable)
+		echo "disabling touchpad..."
+		hypr keyword "device[$TOUCHPAD_DEVICE]:enabled" false >/dev/null
+		;;
+	*)
+		return 3
+		;;
+
+	esac
+
+	echo "Touchpad $TOUCHPAD_DEVICE ${ACTION}d"
+	hypr notify 1 $notify_timeout "$notify_color" "Touchpad $TOUCHPAD_DEVICE ${ACTION}d by touchpadctl."
+}
+
+action=$1
+if [[ "$action" != "enable" && "$action" != "disable" ]]; then
+	echo "Usage: $0 [enable|disable]" >&2
+	exit 1
+fi
+
+for_each_session "$@"
